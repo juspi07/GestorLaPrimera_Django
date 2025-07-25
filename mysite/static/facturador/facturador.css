@@ -1,0 +1,361 @@
+/* reset */
+
+*
+{
+	border: 0;
+	box-sizing: content-box;
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	font-style: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	vertical-align: top;
+}
+
+/* content editable */
+
+*[contenteditable] { border-radius: 0.25em; min-width: 1em; outline: 0; }
+
+*[contenteditable] { cursor: pointer; }
+
+*[contenteditable]:hover, *[contenteditable]:focus, td:hover *[contenteditable], td:focus *[contenteditable], img.hover { background: #DEF; box-shadow: 0 0 1em 0.5em #DEF; }
+
+span[contenteditable] { display: inline-block; }
+
+/* heading */
+
+h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }
+
+/* table */
+
+table { font-size: 75%; table-layout: fixed; width: 100%; }
+table { border-collapse: separate; border-spacing: 2px; }
+th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
+th, td { border-radius: 0.25em; border-style: solid; }
+th { background: #EEE; border-color: #BBB; }
+td { border-color: #DDD; }
+span.totalSpan {font-weight: bold; font-size: medium;}
+
+/* page */
+
+html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; padding: 0.5in; }
+/* html { background: #999; cursor: default; } */
+
+body { box-sizing: border-box; height: 11in; margin: 0 auto; overflow: hidden; padding: 0.5in;  }
+/*body { background: #FFF; border-radius: 1px; box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); } */
+
+/* header */
+
+header { margin: 0 0 3em; }
+header:after { clear: both; content: ""; display: table; }
+
+header h1 { background: #000; border-radius: 0.25em; color: #FFF; margin: 0 0 1em; padding: 0.5em 0; }
+header address { float: left; font-size: 75%; font-style: normal; line-height: 1.25; margin: 0 1em 1em 0; }
+header address p { margin: 0 0 0.25em; }
+header span, header img { display: block; float: right; }
+header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; position: relative; }
+header img { max-height: 100%; max-width: 100%; }
+header input { cursor: pointer; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; height: 100%; left: 0; opacity: 0; position: absolute; top: 0; width: 100%; }
+
+/* article */
+
+article, article address, table.meta, table.inventory { margin: 0 0 3em; }
+article:after { clear: both; content: ""; display: table; }
+article h1 { clip: rect(0 0 0 0); position: absolute; }
+
+article address { float: left; font-size: 125%; font-weight: bold; }
+
+/* table meta & balance */
+
+table.meta, table.balance { float: right; width: 36%; }
+table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
+
+/* table meta */
+
+table.meta th { width: 40%; }
+table.meta td { width: 60%; }
+
+/* table meta & balance */
+
+table.meta2, table.balance2 { float: left; width: 36%; }
+table.meta2:after, table.balance2:after { clear: both; content: ""; display: table; }
+
+/* table meta */
+
+table.meta2 th { width: 40%; }
+table.meta2 td { width: 60%; }
+
+/* table items */
+
+table.inventory { clear: both; width: 100%;}   
+table.inventory th { font-weight: bold; font-size: small; }
+table.inventory td { text-align: center; font-size:medium; }
+
+/*
+table.inventory td:nth-child(1) { width: 26%; }
+table.inventory td:nth-child(2) { width: 38%; }
+table.inventory td:nth-child(3) { text-align: right; width: 12%; }
+table.inventory td:nth-child(4) { text-align: right; width: 12%; }
+table.inventory td:nth-child(5) { text-align: right; width: 12%; } */
+
+/* table balance */
+
+.divbalance {padding-top:20%;}
+table.balance th, table.balance td { width: 50%;}
+table.balance td { text-align: right; }
+
+/* aside */
+
+aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
+aside h1 { border-color: #999; border-bottom-style: solid; }
+
+/* javascript */
+
+.add, .cut
+{
+	border-width: 1px;
+	display: block;
+	font-size: .8rem;
+	padding: 0.25em 0.5em;	
+	float: left;
+	text-align: center;
+	width: 0.6em;
+}
+
+.add, .cut
+{
+	background: #9AF;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	background-image: -moz-linear-gradient(#00ADEE 5%, #0078A5 100%);
+	background-image: -webkit-linear-gradient(#00ADEE 5%, #0078A5 100%);
+	border-radius: 0.5em;
+	border-color: #0076A3;
+	color: #FFF;
+	cursor: pointer;
+	font-weight: bold;
+	text-shadow: 0 -1px 2px rgba(0,0,0,0.333);
+}
+
+.add { margin: -2.5em 0 0; }
+
+.add:hover { background: #00ADEE; }
+
+
+.cut { opacity: 0; position: absolute; top: 0; left: -1.5em; }
+.cut { -webkit-transition: opacity 100ms ease-in; }
+
+tr:hover .cut { opacity: 1; }
+
+@media print {
+	* { -webkit-print-color-adjust: exact; }
+	html { background: none; padding: 0; }
+	body { box-shadow: none; margin: 0; }
+	span:empty { display: none; }
+	.add, .cut { display: none; }
+}
+
+@page { margin: 0; }
+
+
+
+.busquedaC {
+    position: absolute; /* Permite posicionar en relación al contenedor */
+    right: 53%; /* Ajusta la posición horizontal hacia la derecha */
+    top: 30%; /* Posiciona en el medio verticalmente */
+    transform: translateY(-50%); /* Centra correctamente el elemento */
+    background-color: #0078A5; /* Color de fondo */
+    color: #FFF; /* Color del texto */
+    padding: 0.5em 1em; /* Espaciado interno */
+    border-radius: 0.25em; /* Esquinas redondeadas */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold; /* Texto en negrita */
+	cursor: pointer;
+}
+
+.busquedaC:hover {
+    background-color: #00ADEE; /* Cambia el color de fondo al pasar el cursor */
+}
+
+button:disabled {
+    background-color: #b0b0b0; /* Gris apagado */
+    color: #ffffff; /* Color del texto */
+    cursor: not-allowed; /* Cambia el cursor para mostrar que está deshabilitado */
+    opacity: 0.6; /* Hace que parezca más apagado */
+}
+
+.busquedaP {
+    position: absolute; /* Permite posicionar en relación al contenedor */
+    right: 46%; /* Ajusta la posición horizontal hacia la derecha */
+    top: 55%; /* Posiciona en el medio verticalmente */
+    transform: translateY(-50%); /* Centra correctamente el elemento */
+    background-color: #0078A5; /* Color de fondo */
+    color: #FFF; /* Color del texto */
+    padding: 0.5em 1em; /* Espaciado interno */
+    border-radius: 0.25em; /* Esquinas redondeadas */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold; /* Texto en negrita */
+	cursor: pointer;
+}
+
+.busquedaP:hover {
+    background-color: #00ADEE; /* Cambia el color de fondo al pasar el cursor */
+}
+
+
+/* Estilo para el fondo del modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro semi-transparente */
+}
+
+/* Contenido del modal */
+.modal-contenido {
+    background-color: #fefefe;
+    margin: 15% auto; /* Centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Ancho del modal */
+    border-radius: 10px;
+    text-align: center;
+}
+
+
+.FinalizarB { 
+    margin-top: 3%;
+    background-color: #0078A5; /* Color de fondo */
+    color: #FFF; /* Color del texto */
+    padding: 0.5em 1em; /* Espaciado interno */
+    border-radius: 0.25em; /* Esquinas redondeadas */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold; /* Texto en negrita */
+	cursor: pointer;
+}
+
+
+/* Botón para cerrar el modal */
+.cerrar {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cerrar:hover, .cerrar:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Contenedor de la barra de búsqueda y los radio buttons */
+.contenedor-busqueda {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribuir espacio */
+    width: 80%; /* Mantener el tamaño de la barra de búsqueda */
+    margin: 0 auto 20px; /* Mantener la estructura original */
+	gap:25px
+}
+
+/* Mantener estructura de la barra de búsqueda */
+.barra-busqueda {
+    flex: 1; /* La barra de búsqueda ocupa todo el espacio posible */
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Contenedor de los radio buttons alineados a la derecha */
+.filtros-busqueda {
+    display: flex;
+    gap: 15px; /* Espaciado entre los botones */
+}
+
+/* Ajuste para los radio buttons */
+.filtros-busqueda label {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.filtros-busqueda input[type="radio"] {
+    margin-right: 8px;
+}
+
+
+/* Mantener la estructura de la tabla */
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.tabla th, .tabla td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+	vertical-align: middle;
+}
+
+.tabla th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Contenedor para el scroll */
+.contenedor-tabla {
+    max-height: 200px; /* Mostrar solo 5 elementos visibles */
+    overflow-y: auto; /* Scroll vertical */
+	overflow-x: hidden; /* Oculta el scroll horizontal */
+    display: block;
+    border: 1px solid #ccc;
+}
+
+/* Fijar encabezado al hacer scroll */
+.tabla thead {
+    position: sticky;
+    top: 0;
+    background-color: #f4f4f4;
+    z-index: 10;
+}
+
+
+.titulo-busqueda {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+
+
+.seleccionar-btn {
+    background-color: #0078A5;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.seleccionar-btn:hover {
+    background-color: #00ADEE;
+}
+
+.fila-seleccionada {
+    background-color: #DFF0D8; /* Color de fondo para la fila seleccionada */
+}
+

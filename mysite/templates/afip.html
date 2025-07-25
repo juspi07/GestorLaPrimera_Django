@@ -1,0 +1,27 @@
+<div id='modalarca' class="modal">
+  <div class="modal-contenido">
+    <h2 class="titulo-busqueda">Conexión ARCA</h2>
+    <br></br>
+    <div id="estado-wsaa">Conectando ...</h4>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#modalarca').style.display = 'block';  
+        fetch('/conectar-wsaa')
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        const estado = document.getElementById('estado-wsaa');
+        if (data.err == 0) {
+            estado.innerHTML = `<h3 style="color: green">¡Listo!</h3>`;
+            setTimeout(() => {
+            document.querySelector("#modalarca").style.display = "none";
+            }, 1200);
+        } else {
+            estado.innerHTML = `<h3 style="color: red;">${data.mensaje}</h3>`;
+        } 
+      });
+  });
+</script>
