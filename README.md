@@ -4,7 +4,7 @@ Proyecto inicial para poder unificar todas las fases del programa gestor y factu
 
 
 La idea incial es utilizar la misma Data-base que utiliza la empresa actualmente.
-
+por el momento unicamente utilizo html para el frontend, pero se podría cambiar a un framework mejor, si el cliente o la situacion lo requiera
 
 ### Features:
 - Ya se puede conectar al Afip para poder pedir la ultima factura que se emitió  
