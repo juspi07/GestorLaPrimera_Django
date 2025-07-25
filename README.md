@@ -19,10 +19,10 @@ Se deberia cambiar ademas en el archivo settings la direccion de la base de dato
 
 ### Imagenes (Se recuerda que todo está en proceso):
 
-![](https://imgur.com/xPmkSrt)
+![](https://i.imgur.com/xPmkSrt.jpeg)
 
-![](https://imgur.com/TUzswWs)
+![](https://i.imgur.com/TUzswWs.jpeg)
 
-![](https://imgur.com/iOUBEGR)
+![](https://i.imgur.com/iOUBEGR.jpeg)
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
