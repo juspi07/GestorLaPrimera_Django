@@ -94,7 +94,7 @@
 	</aside>
 
 
-	{% include 'afip.html' %}
+	
 
 
 	<!-- Modal Clientes -->
@@ -171,12 +171,12 @@
 		</div>
 	</div>
 
-
+{% include 'afip.html' %}
 
 </body>
-
+<script src="{% static 'facturador/facturador.js' %}"></script>
 {% endblock %}
 
 {% block foot %}
-<script src="{% static 'facturador/facturador.js' %}"></script>
+
 {% endblock %}
