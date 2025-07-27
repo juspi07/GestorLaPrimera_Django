@@ -1,28 +1,27 @@
 # GestorLaPrimera_Django
 
-Proyecto inicial para poder unificar todas las fases del programa gestor y facturador que tiene en este momento la empresa, para poder hacerlo por web.
+Initial Project for Web-Based Management and Invoicing System this is an initial project aimed at unifying all the phases of the company's current management and invoicing software into a web-based platform.
 
-
-La idea incial es utilizar la misma Data-base que utiliza la empresa actualmente.
-por el momento unicamente utilizo html para el frontend, pero se podría cambiar a un framework mejor, si el cliente o la situacion lo requiera
+The initial idea is to use the same database currently used by the company. For now, HTML is being used for the frontend, but it could be replaced with a more robust framework if the client or situation requires it.
 
 ### Features:
-- Ya se puede conectar al Afip para poder pedir la ultima factura que se emitió  
-(por razones de seguridad se eliminaron los .crt y .key que irían dentro de la carpeta "cert")
-- Ya se pueden buscar clientes y productos dentro de la web (mediante llamadas AJAX)
-- Al tener productos, tambien calcula el iva y su total
+- Can already connect to AFIP to request the latest issued invoice \
+(for security reasons, the .crt and .key files that go in the "cert" folder have been removed)
+- Clients and products can be searched directly from the web interface (via AJAX calls)
+- When products are selected, the system also calculates TAX and the total amount
 
 
 
-Se deberia cambiar ademas en el archivo settings la direccion de la base de datos.
+The database address should also be updated in the <ins>settings</ins> file.
 
 
-### Imagenes (Se recuerda que todo está en proceso):
+### Images (Reminder: everything is still in progress):
 
 ![](https://i.imgur.com/xPmkSrt.jpeg)
 
 ![](https://i.imgur.com/TUzswWs.jpeg)
 
 ![](https://i.imgur.com/iOUBEGR.jpeg)
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
