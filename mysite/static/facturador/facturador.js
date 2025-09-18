@@ -6,11 +6,11 @@
 
 (function (document) {
 	var
-	head = document.head = document.getElementsByTagName('head')[0] || document.documentElement,
-	elements = 'article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output picture progress section summary time video x'.split(' '),
-	elementsLength = elements.length,
-	elementsIndex = 0,
-	element;
+		head = document.head = document.getElementsByTagName('head')[0] || document.documentElement,
+		elements = 'article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output picture progress section summary time video x'.split(' '),
+		elementsLength = elements.length,
+		elementsIndex = 0,
+		element;
 
 	while (elementsIndex < elementsLength) {
 		element = document.createElement(elements[++elementsIndex]);
@@ -21,8 +21,8 @@
 		'audio[controls],canvas,video{display:inline-block}' +
 		'[hidden],audio{display:none}' +
 		'mark{background:#FF0;color:#000}' +
-	'</style>';
-	
+		'</style>';
+
 
 	return head.insertBefore(element.lastChild, head.firstChild);
 })(document);
@@ -35,35 +35,35 @@
 	NodeList.prototype.length = ArrayPrototype.length;
 
 	ElementPrototype.matchesSelector = ElementPrototype.matchesSelector ||
-	ElementPrototype.mozMatchesSelector ||
-	ElementPrototype.msMatchesSelector ||
-	ElementPrototype.oMatchesSelector ||
-	ElementPrototype.webkitMatchesSelector ||
-	function matchesSelector(selector) {
-		return ArrayPrototype.indexOf.call(this.parentNode.querySelectorAll(selector), this) > -1;
-	};
+		ElementPrototype.mozMatchesSelector ||
+		ElementPrototype.msMatchesSelector ||
+		ElementPrototype.oMatchesSelector ||
+		ElementPrototype.webkitMatchesSelector ||
+		function matchesSelector(selector) {
+			return ArrayPrototype.indexOf.call(this.parentNode.querySelectorAll(selector), this) > -1;
+		};
 
 	ElementPrototype.ancestorQuerySelectorAll = ElementPrototype.ancestorQuerySelectorAll ||
-	ElementPrototype.mozAncestorQuerySelectorAll ||
-	ElementPrototype.msAncestorQuerySelectorAll ||
-	ElementPrototype.oAncestorQuerySelectorAll ||
-	ElementPrototype.webkitAncestorQuerySelectorAll ||
-	function ancestorQuerySelectorAll(selector) {
-		for (var cite = this, newNodeList = new NodeList; cite = cite.parentElement;) {
-			if (cite.matchesSelector(selector)) ArrayPrototype.push.call(newNodeList, cite);
-		}
+		ElementPrototype.mozAncestorQuerySelectorAll ||
+		ElementPrototype.msAncestorQuerySelectorAll ||
+		ElementPrototype.oAncestorQuerySelectorAll ||
+		ElementPrototype.webkitAncestorQuerySelectorAll ||
+		function ancestorQuerySelectorAll(selector) {
+			for (var cite = this, newNodeList = new NodeList; cite = cite.parentElement;) {
+				if (cite.matchesSelector(selector)) ArrayPrototype.push.call(newNodeList, cite);
+			}
 
-		return newNodeList;
-	};
+			return newNodeList;
+		};
 
 	ElementPrototype.ancestorQuerySelector = ElementPrototype.ancestorQuerySelector ||
-	ElementPrototype.mozAncestorQuerySelector ||
-	ElementPrototype.msAncestorQuerySelector ||
-	ElementPrototype.oAncestorQuerySelector ||
-	ElementPrototype.webkitAncestorQuerySelector ||
-	function ancestorQuerySelector(selector) {
-		return this.ancestorQuerySelectorAll(selector)[0] || null;
-	};
+		ElementPrototype.mozAncestorQuerySelector ||
+		ElementPrototype.msAncestorQuerySelector ||
+		ElementPrototype.oAncestorQuerySelector ||
+		ElementPrototype.webkitAncestorQuerySelector ||
+		function ancestorQuerySelector(selector) {
+			return this.ancestorQuerySelectorAll(selector)[0] || null;
+		};
 })(this, Element.prototype, Array.prototype);
 
 /* Helper Functions
@@ -90,11 +90,11 @@ function parsePrice(number) {
 /* ========================================================================== */
 
 function updateNumber(e) {
-	
+
 	var
-	activeElement = document.activeElement,
-	value = parseFloat(activeElement.innerHTML),
-	wasPrice = activeElement.innerHTML == parsePrice(parseFloatHTML(activeElement));
+		activeElement = document.activeElement,
+		value = parseFloat(activeElement.innerHTML),
+		wasPrice = activeElement.innerHTML == parsePrice(parseFloatHTML(activeElement));
 
 	if (!isNaN(value) && (e.keyCode == 38 || e.keyCode == 40 || e.wheelDeltaY)) {
 		e.preventDefault();
@@ -161,9 +161,9 @@ function updateInvoice() {
 
 function onContentLoad() {
 	var
-	input = document.querySelector('input'),
-	image = document.querySelector('img');
-	
+		input = document.querySelector('input'),
+		image = document.querySelector('img');
+
 	function onClick(e) {
 		var element = e.target.querySelector('[contenteditable]'), row;
 
@@ -198,9 +198,9 @@ function onContentLoad() {
 		image.classList.remove('hover');
 
 		var
-		reader = new FileReader(),
-		files = e.dataTransfer ? e.dataTransfer.files : e.target.files,
-		i = 0;
+			reader = new FileReader(),
+			files = e.dataTransfer ? e.dataTransfer.files : e.target.files,
+			i = 0;
 
 		reader.onload = onFileLoad;
 
@@ -216,40 +216,40 @@ function onContentLoad() {
 	function inputCantidad(event) {
 		if (event.target.matches("td[contenteditable]")) {
 			let contenido = event.target.textContent;
-		
+
 			// Filtra solo números y un único punto decimal
 			contenido = contenido.replace(/[^0-9.]/g, '');
-			
+
 			// Limita a un solo punto decimal y solo permite 3 decimales después de él
 			const partes = contenido.split('.');
 			if (partes.length > 2) {
-			  contenido = partes[0] + '.' + partes.slice(1).join('');
+				contenido = partes[0] + '.' + partes.slice(1).join('');
 			} else if (partes.length === 2) {
-			  partes[1] = partes[1].substring(0, 3); // Limita los decimales a 3 dígitos
-			  contenido = partes.join('.');
+				partes[1] = partes[1].substring(0, 3); // Limita los decimales a 3 dígitos
+				contenido = partes.join('.');
 			}
-		
+
 			// Usamos setTimeout para evitar la interrupción del cursor
 			setTimeout(() => {
-			  event.target.textContent = contenido;
-		
-			  // Restaurar el cursor al final
-			  const range = document.createRange();
-			  const selection = window.getSelection();
-		
-			  range.selectNodeContents(event.target);
-			  range.collapse(false);
-			  selection.removeAllRanges();
-			  selection.addRange(range);
+				event.target.textContent = contenido;
+
+				// Restaurar el cursor al final
+				const range = document.createRange();
+				const selection = window.getSelection();
+
+				range.selectNodeContents(event.target);
+				range.collapse(false);
+				selection.removeAllRanges();
+				selection.addRange(range);
 			}, 0);
-		  }
+		}
 	}
-	
+
 	if (window.addEventListener) {
 		//document.addEventListener('click', onClick);
 
 		document.addEventListener('input', inputCantidad);
-		
+
 		//document.addEventListener('mousewheel', updateNumber);
 		//document.addEventListener('keydown', updateNumber);
 
@@ -278,75 +278,92 @@ window.addEventListener && document.addEventListener('DOMContentLoaded', onConte
 
 // Función para abrir el modal
 function abrirModal() {
-    document.getElementById("miModal").style.display = "block";
+	document.getElementById("miModal").style.display = "block";
 }
 
 // Función para cerrar el modal
 function cerrarModal() {
-    document.getElementById("miModal").style.display = "none";
+	document.getElementById("miModal").style.display = "none";
 }
 
 // Función para abrir el modal
 function abrirModalP() {
-    document.getElementById("miModalP").style.display = "block";
+	document.getElementById("miModalP").style.display = "block";
 	document.getElementById("busquedaP").value = ''
 	var tabla = document.getElementById("tablap").getElementsByTagName('tbody')[0];
 	tabla.innerHTML = "";
 
 }
 
-// Función para cerrar el modal
-function cerrarModalP() {
-    document.getElementById("miModalP").style.display = "none";
+// Función para abrir el modal
+function abrirModalCant(Nuevafila, Cantidad) {
+	document.getElementById("modalcantidad").style.display = "block";
+	document.getElementById("input-cant").value = Cantidad;
+	document.getElementById("bt-fin-cant").setAttribute('onclick', `cerrarModalCant(${Nuevafila})`);
 }
 
+// Función para cerrar el modal
+function cerrarModalCant(nuevaFila) {
+	document.getElementById("modalcantidad").style.display = "none";
+	console.log(nuevaFila);
+}
+
+// Función para cerrar el modal
+function cerrarModalP() {
+	document.getElementById("miModalP").style.display = "none";
+}
+
+
+
+
+
 function seleccionarFila(boton) {
-    // Obtener la fila que contiene el botón
+	// Obtener la fila que contiene el botón
 	var cuit = boton.parentNode.parentNode.cells[0].innerText;
-	
+
 	// Llamada AJAX a Django para procesar los datos
 	fetch(`/seleccionar_cliente?q=${cuit}`)
-	.then(response => response.json())
-	.then(data => {
-		document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
-		document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
-		document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
-		document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
-		document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
-		document.getElementById("BCliente").disabled = true;
-		document.getElementById("BProductos").disabled = false;
-	})
-	.catch(error => console.error("Error en la solicitud:", error));
-	
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
+			document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
+			document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
+			document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
+			document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
+			document.getElementById("BCliente").disabled = true;
+			document.getElementById("BProductos").disabled = false;
+		})
+		.catch(error => console.error("Error en la solicitud:", error));
+
 	document.getElementById("miModal").style.display = "none";
 }
 
 function buscarClientes() {
-    var query = document.getElementById("busqueda").value;  // Obtener valor ingresado
+	var query = document.getElementById("busqueda").value;  // Obtener valor ingresado
 	var tabla = document.getElementById("tabla").getElementsByTagName('tbody')[0];
 
-    // Evitar consultas vacías
-    if (query.length < 1) {
-    	tabla.innerHTML = "";  // Vaciar tabla si el campo está vacío
-    	return;
-    }
+	// Evitar consultas vacías
+	if (query.length < 1) {
+		tabla.innerHTML = "";  // Vaciar tabla si el campo está vacío
+		return;
+	}
 
-    // Realizar petición AJAX
-    fetch(`/buscar_clientes?q=${query}`)
-        .then(response => response.json())
-        .then(data => {
+	// Realizar petición AJAX
+	fetch(`/buscar_clientes?q=${query}`)
+		.then(response => response.json())
+		.then(data => {
 			tabla.innerHTML = "";
-            // Insertar los nuevos resultados en la tabla
-            data.clientes.forEach(cliente => {
+			// Insertar los nuevos resultados en la tabla
+			data.clientes.forEach(cliente => {
 				var nuevaFila = tabla.insertRow();
 				var celdaCUIT = nuevaFila.insertCell(0);
 				var celdaRazons = nuevaFila.insertCell(1);
 				var celdaAccion = nuevaFila.insertCell(2);
 				celdaCUIT.innerHTML = `<td>${cliente.cuit}</td>`;
 				celdaRazons.innerHTML = `<td>${cliente.razons}</td>`;
-				celdaAccion.innerHTML = `<td><button class="seleccionar-btn" onclick="seleccionarFila(this)">Seleccionar</button></td>`;		
-            });
-        });
+				celdaAccion.innerHTML = `<td><button class="seleccionar-btn" onclick="seleccionarFila(this)">Seleccionar</button></td>`;
+			});
+		});
 }
 
 function buscarProductos() {
@@ -354,19 +371,19 @@ function buscarProductos() {
 	var query2 = document.getElementById("list").innerText;
 	var tabla = document.getElementById("tablap").getElementsByTagName('tbody')[0];
 
-    // Evitar consultas vacías
-    if (query.length < 1) {
-    	tabla.innerHTML = "";  // Vaciar tabla si el campo está vacío
-    	return;
-    }
+	// Evitar consultas vacías
+	if (query.length < 1) {
+		tabla.innerHTML = "";  // Vaciar tabla si el campo está vacío
+		return;
+	}
 
-    // Realizar petición AJAX
-    fetch(`/buscar_productos?q=${query}&w=${query2}`)
-        .then(response => response.json())
-        .then(data => {
+	// Realizar petición AJAX
+	fetch(`/buscar_productos?q=${query}&w=${query2}`)
+		.then(response => response.json())
+		.then(data => {
 			tabla.innerHTML = "";
-            // Insertar los nuevos resultados en la tabla
-            data.productos.forEach(producto => {
+			// Insertar los nuevos resultados en la tabla
+			data.productos.forEach(producto => {
 				var nuevaFila = tabla.insertRow();
 				var celdaNombre = nuevaFila.insertCell(0);
 				var celdaCant = nuevaFila.insertCell(1);
@@ -377,24 +394,24 @@ function buscarProductos() {
 				celdaCant.setAttribute("contenteditable", "true"); // Hacer editable
 				celdaCant.setAttribute("onclick", "borrarContenido(this)")
 				celdaPrecio.innerHTML = `<td>${producto.precio}</td>`;
-				celdaAccion.innerHTML = `<td><button class="seleccionar-btn" onclick="seleccionarFilaP(this)">Seleccionar</button></td>`;		
-            });
-        });
+				celdaAccion.innerHTML = `<td><button class="seleccionar-btn" onclick="seleccionarFilaP(this)">Seleccionar</button></td>`;
+			});
+		});
 }
-
 
 function redondearDecimales(numero, decimales) {
-    numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
-    if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
-        return Number(numero.toFixed(decimales));
-    } else {
-        return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
-    }
+	numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
+	if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+		return Number(numero.toFixed(decimales));
+	} else {
+		return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+	}
 }
+
 
 
 function seleccionarFilaP(boton) {
-    // Obtener la fila que contiene el botón
+	// Obtener la fila que contiene el botón
 	var nombre = boton.parentNode.parentNode.cells[0].innerText;
 	var cantidad = boton.parentNode.parentNode.cells[1].innerText;
 	var precio = boton.parentNode.parentNode.cells[2].innerText;
@@ -402,20 +419,28 @@ function seleccionarFilaP(boton) {
 	precio = precio / 1.21
 
 	tabla = document.getElementById("tabla-inventory").getElementsByTagName('tbody')[0];
-	
+
 	var nuevaFila = tabla.insertRow();
+	var filaIndex = Array.from(tabla.rows).indexOf(nuevaFila);
 	var celdaDesc = nuevaFila.insertCell(0);
 	var celdaCant = nuevaFila.insertCell(1);
 	var celdaPrice = nuevaFila.insertCell(2);
 	var celdaPrice2 = nuevaFila.insertCell(3);
 	var aux = parseFloat(cantidad) * parseFloat(precio)
 	celdaDesc.innerHTML = `<td><a class="cut">-</a><span>${nombre}</span></td>`;
-	celdaCant.innerHTML = `<td><span contenteditable>${cantidad}</span></td>`;
+	celdaCant.innerHTML = `
+	<td>
+		<div class="celda-cantidad">
+		<span class="cantidad-texto">${cantidad}</span>
+		<button class="btn-cantidad" onclick="abrirModalCant(${filaIndex}, ${cantidad})">✏️</button>
+		</div>
+	</td>
+	`;
 	celdaPrice.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(precio, 4)}</span></td>`;
 	celdaPrice2.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(aux, 2)}</span></td>`;
 
 	boton.parentNode.parentNode.remove()
-	
+
 	CalcularFactura()
 }
 
@@ -423,7 +448,7 @@ function CalcularFactura() {
 	var tabla = document.getElementById("tbody-inventory")
 	var total = 0
 
-	for (let i = 0; i < tabla.rows.length; i++) { 
+	for (let i = 0; i < tabla.rows.length; i++) {
 		let fila = tabla.rows[i]
 		let celda = fila.cells[3]
 		let spans = celda.querySelectorAll("span")
@@ -431,12 +456,12 @@ function CalcularFactura() {
 		total += parseFloat(spans[1].innerText)
 	}
 	var total2 = total * 1.21
-	
+
 	document.getElementById('subtotalSpan').innerHTML = `$ ${redondearDecimales(total, 2)}`
-	
+
 	var iva = (total * 0.21) / 1.21
 	document.getElementById('ivaSpan').innerHTML = `$ ${redondearDecimales(iva, 2)}`
-	
+
 	document.getElementById('totalSpan').innerHTML = `$ ${redondearDecimales(total2, 2)}`
 	document.getElementById('totalSpan2').innerHTML = `$ ${redondearDecimales(total2, 2)}`
 }
@@ -445,6 +470,6 @@ function CalcularFactura() {
 
 
 function borrarContenido(celda) {
-    celda.innerText = ""; // Borra el contenido de la celda
+	celda.innerText = ""; // Borra el contenido de la celda
 }
 

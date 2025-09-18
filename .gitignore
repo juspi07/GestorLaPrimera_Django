@@ -1,0 +1,10 @@
+.vscode
+**/__pycache__/
+**__pycache__
+db.sqlite3
+package-lock.json
+package.json
+**cache
+migrations
+mysite/static/cert/**
+mysite/migrations

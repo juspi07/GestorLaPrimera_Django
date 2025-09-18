@@ -2,8 +2,8 @@ from django.shortcuts import render
 from .models import *
 from datetime import datetime
 from django.http import JsonResponse
-from PyAfipWS.wsaa import WSAA
-from PyAfipWS.wsfev1 import WSFEv1
+from .Afip.wsaa import WSAA
+from .Afip.wsfev1 import WSFEv1
 import os
 import asyncio
 
@@ -59,12 +59,9 @@ def conectar_Afip():
         Wsfe = WSFEv1()
         Wsfe.SetTicketAcceso(
             WSAA().Autenticar("wsfe", Crt, Key))
-        Wsfe.Cuit = 20218452788
-
-        
+        Wsfe.Cuit = 20218452788        
         Wsfe.Conectar()
-        
-        #Wsfe.Cuit = 30670206528
+
         return True
     except:
         return False
@@ -91,4 +88,3 @@ async def conectar_wsaa(request):
             err = 2
             msg = 'El servidor de AFIP no está disponible, revise que tenga internet tambien.'
     return JsonResponse({'mensaje': msg, 'err': err})
-    

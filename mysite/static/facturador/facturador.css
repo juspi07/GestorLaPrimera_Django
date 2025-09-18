@@ -243,6 +243,30 @@ button:disabled {
 	cursor: pointer;
 }
 
+.celda-cantidad {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.cantidad-texto {
+    margin: 0 auto; /* Centra horizontalmente */
+    text-align: center;
+    flex-grow: 1;
+}
+
+.btn-cantidad {
+    /*background-color: #0078A5; 
+    color: #FFF;*/
+    padding: 2px 6px;
+    font-size: 0.75em;
+    border-radius: 3px;
+    font-weight: normal;
+    cursor: pointer;
+    border: none;
+    margin-left: auto; /* Empuja el botón a la derecha */
+}
+
 
 /* Botón para cerrar el modal */
 .cerrar {
