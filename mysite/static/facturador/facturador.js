@@ -318,7 +318,8 @@ document.getElementById("bt-fin-cant").onclick = function () {
 	if (celdaActual) {
 		celdaActual.querySelector("span").innerText = nuevoValor;
 	}
-	var precioUn = parseFloat(fila.cells[2].querySelectorAll("span")[1].innerText);
+
+	var precioUn = parseFloat(fila.cells[2].querySelector("span").innerText);
 	var total = redondearDecimales(parseFloat(precioUn * nuevoValor), 2)
 	fila.cells[3].querySelectorAll("span")[1].innerText = total
 
@@ -338,10 +339,12 @@ document.getElementById("bt-fin-precio").onclick = function () {
 	var nuevoValor = document.getElementById("input-precio").value;
 
 	if (celdaActual) {
-		celdaActual.querySelectorAll("span")[1].innerText = nuevoValor;
+		celdaActual.querySelector("span").innerText = nuevoValor
 	}
-	var precioUn = parseFloat(fila.cells[2].querySelectorAll("span")[1].innerText);
-	var total = redondearDecimales(parseFloat(precioUn * nuevoValor), 2)
+	var cantidad = parseFloat(fila.cells[1].querySelector("span").innerText);
+	var total = redondearDecimales(parseFloat(cantidad * nuevoValor), 2)
+
+
 	fila.cells[3].querySelectorAll("span")[1].innerText = total
 
 	CalcularFactura()
@@ -466,7 +469,7 @@ function seleccionarFilaP(boton) {
 		</div>
 	</td>
 	`;
-	
+
 	//celdaPrice.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(precio, 4)}</span></td>`;
 	celdaPrice2.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(aux, 2)}</span></td>`;
 
@@ -512,4 +515,43 @@ function CalcularFactura() {
 function borrarContenido(celda) {
 	celda.innerText = ""; // Borra el contenido de la celda
 }
+
+
+/* Patterns para cantidad y precio */
+const input = document.getElementById("input-cantidad");
+const inputP = document.getElementById("input-precio");
+
+
+input.addEventListener("input", () => {
+	const valor = input.value;
+	const regex = /^\d{0,4}(\.\d{0,3})?$/;
+
+	if (!regex.test(valor)) {
+		// Elimina el último carácter si rompe el patrón
+		input.value = valor.slice(0, -1);
+	}
+});
+inputP.addEventListener("input", () => {
+	const valor = inputP.value;
+	const regex = /^([1-9]+[0-9]+|[0-9])([\\.][0-9]{1,4})?$/;
+	const btt = document.getElementById("bt-fin-precio")
+	if (!regex.test(valor)) {
+		btt.disabled = true
+	} else {
+		btt.disabled = false
+	}
+	try {
+		if (valor.split('.')[1].length > 4) {
+			inputP.value = valor.slice(0, -1)
+			btt.disabled = false
+		}
+	}
+	catch { null }
+
+
+
+});
+
+
+
 
