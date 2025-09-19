@@ -35,7 +35,7 @@ h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text
 
 table { font-size: 75%; table-layout: fixed; width: 100%; }
 table { border-collapse: separate; border-spacing: 2px; }
-th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
+th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: center; }
 th, td { border-radius: 0.25em; border-style: solid; }
 th { background: #EEE; border-color: #BBB; }
 td { border-color: #DDD; }
@@ -220,7 +220,7 @@ button:disabled {
     background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro semi-transparente */
 }
 
-/* Contenido del modal */
+/* Contenido del modal clientes y productos */
 .modal-contenido {
     background-color: #fefefe;
     margin: 15% auto; /* Centrado */
@@ -231,6 +231,17 @@ button:disabled {
     text-align: center;
 }
 
+/* Contenido del modal cantidad y precio */
+.modal-contenido2 {
+    background-color: #fefefe;
+    margin: 15% auto; /* Centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Ancho del modal */
+    border-radius: 10px;
+    text-align: center;
+    height: fit-content;
+}
 
 .FinalizarB { 
     margin-top: 3%;

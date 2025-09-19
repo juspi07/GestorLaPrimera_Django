@@ -7,15 +7,17 @@
 
 
 {% block head %}
+
 <head>
 	<link rel="stylesheet" href="{% static 'facturador/facturador.css' %}">
 	<link rel="license" href="https://www.opensource.org/licenses/mit-license/">
-	
+
 
 </head>
 {% endblock %}
 
 {% block content %}
+
 <body>
 	<article>
 		<table class="meta2">
@@ -44,7 +46,7 @@
 		<table class="meta">
 			<tr>
 				<th><span>Invoice #</span></th>
-				<td><span>------</span></td> 
+				<td><span>------</span></td>
 			</tr>
 			<tr>
 				<th><span>Date</span></th>
@@ -94,7 +96,7 @@
 	</aside>
 
 
-	
+
 
 
 	<!-- Modal Clientes -->
@@ -133,27 +135,38 @@
 					<td><button class="seleccionar-btn" onclick="seleccionarFila(this)">Seleccionar</button></td>
 				</tr>
 				{% endfor %} -->
-				{% endcomment %}
+						{% endcomment %}
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 
+
 	<!-- Modal Cantidad -->
 	<div id="modalcantidad" class="modal">
-		<div class="modal-contenido">
-			<span class="cerrar" onclick="cerrarModalCant()">&times;</span>
+		<div class="modal-contenido2">
 			<h2 class="titulo-busqueda">Modificar Cantidad</h2>
 			<div class="contenedor-busqueda">
-				<input type="text" id="input-cant" placeholder="Cantidad" class="barra-busqueda">
+				<input pattern="^\d{9}\.\d{4}$" maxlength="14" inputmode="decimal" type="text" id="input-cantidad"
+					placeholder="Cantidad" class="barra-busqueda">
 			</div>
 			<button class="FinalizarB" id="bt-fin-cant">Aceptar</button>
 		</div>
 	</div>
-	
-	
-	
+
+	<!-- Modal Precio -->
+	<div id="modalprecio" class="modal">
+		<div class="modal-contenido2">
+			<h2 class="titulo-busqueda">Modificar Precio</h2>
+			<div class="contenedor-busqueda">
+				<input pattern="^\d{9}\.\d{4}$" maxlength="14" inputmode="decimal" type="text" id="input-precio"
+					placeholder="Precio" class="barra-busqueda">
+			</div>
+			<button class="FinalizarB" id="bt-fin-precio">Aceptar</button>
+		</div>
+	</div>
+
 	<!-- Modal Productos -->
 	<div id="miModalP" class="modal">
 		<div class="modal-contenido">
@@ -185,7 +198,7 @@
 		</div>
 	</div>
 
-{% include 'afip.html' %}
+	{% include 'afip.html' %}
 
 </body>
 <script src="{% static 'facturador/facturador.js' %}"></script>

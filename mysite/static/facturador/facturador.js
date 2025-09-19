@@ -274,19 +274,21 @@ window.addEventListener && document.addEventListener('DOMContentLoaded', onConte
 
 
 
+//					Funciones adicionales propias
+// =====================================================================
 
+let celdaActual = null;
 
-// Función para abrir el modal
+// Función para abrir el modal de busqueda de Clientes
 function abrirModal() {
 	document.getElementById("miModal").style.display = "block";
 }
 
-// Función para cerrar el modal
 function cerrarModal() {
 	document.getElementById("miModal").style.display = "none";
 }
 
-// Función para abrir el modal
+// Función para abrir y cerrar el modal de busqueda de Productos
 function abrirModalP() {
 	document.getElementById("miModalP").style.display = "block";
 	document.getElementById("busquedaP").value = ''
@@ -295,49 +297,60 @@ function abrirModalP() {
 
 }
 
-// Función para abrir el modal
-function abrirModalCant(Nuevafila, Cantidad) {
-	document.getElementById("modalcantidad").style.display = "block";
-	document.getElementById("input-cant").value = Cantidad;
-	document.getElementById("bt-fin-cant").setAttribute('onclick', `cerrarModalCant(${Nuevafila})`);
-}
-
-// Función para cerrar el modal
-function cerrarModalCant(nuevaFila) {
-	document.getElementById("modalcantidad").style.display = "none";
-	console.log(nuevaFila);
-}
-
-// Función para cerrar el modal
 function cerrarModalP() {
 	document.getElementById("miModalP").style.display = "none";
 }
 
 
+/* Funciones para abrir el modal de cantidad y modificar cantidad */
 
-
-
-function seleccionarFila(boton) {
-	// Obtener la fila que contiene el botón
-	var cuit = boton.parentNode.parentNode.cells[0].innerText;
-
-	// Llamada AJAX a Django para procesar los datos
-	fetch(`/seleccionar_cliente?q=${cuit}`)
-		.then(response => response.json())
-		.then(data => {
-			document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
-			document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
-			document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
-			document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
-			document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
-			document.getElementById("BCliente").disabled = true;
-			document.getElementById("BProductos").disabled = false;
-		})
-		.catch(error => console.error("Error en la solicitud:", error));
-
-	document.getElementById("miModal").style.display = "none";
+function abrirModalCant(celda) {
+	celdaActual = celda;
+	var valor = celda.querySelector("span").innerText;
+	document.getElementById("input-cantidad").value = valor;
+	document.getElementById("modalcantidad").style.display = "flex";
 }
 
+document.getElementById("bt-fin-cant").onclick = function () {
+	var fila = celdaActual.parentNode.parentNode;
+	var nuevoValor = document.getElementById("input-cantidad").value;
+
+	if (celdaActual) {
+		celdaActual.querySelector("span").innerText = nuevoValor;
+	}
+	var precioUn = parseFloat(fila.cells[2].querySelectorAll("span")[1].innerText);
+	var total = redondearDecimales(parseFloat(precioUn * nuevoValor), 2)
+	fila.cells[3].querySelectorAll("span")[1].innerText = total
+
+	CalcularFactura()
+	document.getElementById("modalcantidad").style.display = "none";
+};
+
+function abrirModalPres(celda) {
+	celdaActual = celda;
+	var valor = celda.querySelector("span").innerText;
+	document.getElementById("input-precio").value = valor;
+	document.getElementById("modalprecio").style.display = "flex";
+}
+
+document.getElementById("bt-fin-precio").onclick = function () {
+	var fila = celdaActual.parentNode.parentNode;
+	var nuevoValor = document.getElementById("input-precio").value;
+
+	if (celdaActual) {
+		celdaActual.querySelectorAll("span")[1].innerText = nuevoValor;
+	}
+	var precioUn = parseFloat(fila.cells[2].querySelectorAll("span")[1].innerText);
+	var total = redondearDecimales(parseFloat(precioUn * nuevoValor), 2)
+	fila.cells[3].querySelectorAll("span")[1].innerText = total
+
+	CalcularFactura()
+	document.getElementById("modalprecio").style.display = "none";
+};
+
+
+
+/* Llamadas AJAX, busqueda de productos, clientes y seleccion de fila para el facturador */
 function buscarClientes() {
 	var query = document.getElementById("busqueda").value;  // Obtener valor ingresado
 	var tabla = document.getElementById("tabla").getElementsByTagName('tbody')[0];
@@ -399,16 +412,26 @@ function buscarProductos() {
 		});
 }
 
-function redondearDecimales(numero, decimales) {
-	numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
-	if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
-		return Number(numero.toFixed(decimales));
-	} else {
-		return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
-	}
+function seleccionarFila(boton) {
+	// Obtener la fila que contiene el botón
+	var cuit = boton.parentNode.parentNode.cells[0].innerText;
+
+	// Llamada AJAX a Django para procesar los datos
+	fetch(`/seleccionar_cliente?q=${cuit}`)
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
+			document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
+			document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
+			document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
+			document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
+			document.getElementById("BCliente").disabled = true;
+			document.getElementById("BProductos").disabled = false;
+		})
+		.catch(error => console.error("Error en la solicitud:", error));
+
+	document.getElementById("miModal").style.display = "none";
 }
-
-
 
 function seleccionarFilaP(boton) {
 	// Obtener la fila que contiene el botón
@@ -421,7 +444,6 @@ function seleccionarFilaP(boton) {
 	tabla = document.getElementById("tabla-inventory").getElementsByTagName('tbody')[0];
 
 	var nuevaFila = tabla.insertRow();
-	var filaIndex = Array.from(tabla.rows).indexOf(nuevaFila);
 	var celdaDesc = nuevaFila.insertCell(0);
 	var celdaCant = nuevaFila.insertCell(1);
 	var celdaPrice = nuevaFila.insertCell(2);
@@ -432,16 +454,39 @@ function seleccionarFilaP(boton) {
 	<td>
 		<div class="celda-cantidad">
 		<span class="cantidad-texto">${cantidad}</span>
-		<button class="btn-cantidad" onclick="abrirModalCant(${filaIndex}, ${cantidad})">✏️</button>
+		<button class="btn-cantidad" onclick="abrirModalCant(this.parentNode)">✏️</button>
 		</div>
 	</td>
 	`;
-	celdaPrice.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(precio, 4)}</span></td>`;
+	celdaPrice.innerHTML = `
+	<td>
+		<div class="celda-cantidad">
+		<span class="cantidad-texto">${redondearDecimales(precio, 4)}</span>
+		<button class="btn-cantidad" onclick="abrirModalPres(this.parentNode)">✏️</button>
+		</div>
+	</td>
+	`;
+	
+	//celdaPrice.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(precio, 4)}</span></td>`;
 	celdaPrice2.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(aux, 2)}</span></td>`;
 
 	boton.parentNode.parentNode.remove()
 
 	CalcularFactura()
+}
+
+
+
+
+/* Funciones de utilidad */
+
+function redondearDecimales(numero, decimales) {
+	numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
+	if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+		return Number(numero.toFixed(decimales));
+	} else {
+		return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+	}
 }
 
 function CalcularFactura() {
@@ -450,10 +495,8 @@ function CalcularFactura() {
 
 	for (let i = 0; i < tabla.rows.length; i++) {
 		let fila = tabla.rows[i]
-		let celda = fila.cells[3]
-		let spans = celda.querySelectorAll("span")
-		//console.log(parseFloat(spans[1].innerText))
-		total += parseFloat(spans[1].innerText)
+		let celda = fila.cells[3].querySelectorAll("span")[1].innerText
+		total += parseFloat(celda)
 	}
 	var total2 = total * 1.21
 
@@ -465,9 +508,6 @@ function CalcularFactura() {
 	document.getElementById('totalSpan').innerHTML = `$ ${redondearDecimales(total2, 2)}`
 	document.getElementById('totalSpan2').innerHTML = `$ ${redondearDecimales(total2, 2)}`
 }
-
-
-
 
 function borrarContenido(celda) {
 	celda.innerText = ""; // Borra el contenido de la celda
