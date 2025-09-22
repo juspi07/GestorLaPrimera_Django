@@ -61,7 +61,7 @@
 		<table class="inventory" id="tabla-inventory">
 			<thead>
 				<tr>
-					<th><span>Descripcion</span></th>
+					<th><span>Descripción</span></th>
 					<th><span>Cantidad</span></th>
 					<th><span>Precio Unitario (s/iva)</span></th>
 					<th><span>Total (s/iva)</span></th>
@@ -146,22 +146,26 @@
 	<!-- Modal Cantidad -->
 	<div id="modalcantidad" class="modal">
 		<div class="modal-contenido2">
-			<h2 class="titulo-busqueda">Modificar Cantidad</h2>
-			<div class="contenedor-busqueda">
-				<input type="text" id="input-cantidad"
-					placeholder="Cantidad" class="barra-busqueda">
-			</div>
-			<button class="FinalizarB" id="bt-fin-cant">Aceptar</button>
+			<span class="cerrar" onclick="document.getElementById('modalcantidad').style.display = 'none';">
+				&times;
+			</span>
+				<h2 class="titulo-busqueda">Modificar Cantidad</h2>
+				<div class="contenedor-busqueda">
+					<input type="text" id="input-cantidad" placeholder="Cantidad" class="barra-busqueda">
+				</div>
+				<button class="FinalizarB" id="bt-fin-cant">Aceptar</button>
 		</div>
 	</div>
 
 	<!-- Modal Precio -->
 	<div id="modalprecio" class="modal">
 		<div class="modal-contenido2">
+			<span class="cerrar" onclick="document.getElementById('modalprecio').style.display = 'none';">
+				&times;
+			</span>
 			<h2 class="titulo-busqueda">Modificar Precio</h2>
 			<div class="contenedor-busqueda">
-				<input type="text" id="input-precio"
-					placeholder="Precio" class="barra-busqueda">
+				<input type="text" id="input-precio" placeholder="Precio" class="barra-busqueda">
 			</div>
 			<button class="FinalizarB" id="bt-fin-precio">Aceptar</button>
 		</div>
