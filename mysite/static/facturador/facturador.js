@@ -1,556 +1,453 @@
-/* Shivving (IE8 is not supported, but at least it won't look as awful)
-/* ========================================================================== */
+document.addEventListener("DOMContentLoaded", function () {
+	const BCliente = document.getElementById("BCliente");
+	const BProductos = document.getElementById("BProductos");
+	const BCantidad = document.getElementById("BCantidad");
+	const BPrecio = document.getElementById("BPrecio");
+	const cerrarModalClientes = document.getElementById("CerrarModalClientes");
+	const cerrarModalProducts = document.getElementById("CerrarModalProductos");
+	const cerrarModalCantidad = document.getElementById("CerrarModalCantidad");
+	const cerrarModalPrecio = document.getElementById("CerrarModalPrecio");
+	const ModalCliente = document.getElementById("ModalCliente");
+	const ModalProductos = document.getElementById("ModalProductos");
+	const ModalCantidad = document.getElementById("ModalCantidad");
+	const ModalPrecio = document.getElementById("ModalPrecio");
+	const SearchBar_Client = document.getElementById("SearchBar_Client");
+	const SearchBar_Products = document.getElementById("SearchBar_Products");
+	const TablaProductos = document.getElementById("tablaProductos");
+	const TablaModalProductos = document.getElementById("TablaModalProductos");
+	const TablaModalClient = document.getElementById("TablaModalClient");
+	const InputCant = document.getElementById("InputCant");
+	const BCerrarCant = document.getElementById("BCerrarCant");
+	const BCerrarPrec = document.getElementById("BCerrarPrec");
+
+
+
+	/* Funciones de los botones de los modal modificar Cantidad y Precio */
+
+	BCerrarCant.onclick = () => {
+		ModalCantidad.style.display = "none";
+	};
+
+	BCerrarPrec.onclick = () => {
+		ModalPrecio.style.display = "none";
+	};
 
 
 
 
-(function (document) {
-	var
-		head = document.head = document.getElementsByTagName('head')[0] || document.documentElement,
-		elements = 'article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output picture progress section summary time video x'.split(' '),
-		elementsLength = elements.length,
-		elementsIndex = 0,
-		element;
-
-	while (elementsIndex < elementsLength) {
-		element = document.createElement(elements[++elementsIndex]);
-	}
-
-	element.innerHTML = 'x<style>' +
-		'article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block}' +
-		'audio[controls],canvas,video{display:inline-block}' +
-		'[hidden],audio{display:none}' +
-		'mark{background:#FF0;color:#000}' +
-		'</style>';
 
 
-	return head.insertBefore(element.lastChild, head.firstChild);
-})(document);
+	/* Funciones del boton Clientes */
 
-/* Prototyping
-/* ========================================================================== */
+	SearchBar_Client.onkeyup = function () {
+		var query = SearchBar_Client.value;  // Obtener valor ingresado
+		var tabla = document.getElementById("TablaModalClient").getElementsByTagName('tbody')[0];
 
-(function (window, ElementPrototype, ArrayPrototype, polyfill) {
-	function NodeList() { [polyfill] }
-	NodeList.prototype.length = ArrayPrototype.length;
-
-	ElementPrototype.matchesSelector = ElementPrototype.matchesSelector ||
-		ElementPrototype.mozMatchesSelector ||
-		ElementPrototype.msMatchesSelector ||
-		ElementPrototype.oMatchesSelector ||
-		ElementPrototype.webkitMatchesSelector ||
-		function matchesSelector(selector) {
-			return ArrayPrototype.indexOf.call(this.parentNode.querySelectorAll(selector), this) > -1;
-		};
-
-	ElementPrototype.ancestorQuerySelectorAll = ElementPrototype.ancestorQuerySelectorAll ||
-		ElementPrototype.mozAncestorQuerySelectorAll ||
-		ElementPrototype.msAncestorQuerySelectorAll ||
-		ElementPrototype.oAncestorQuerySelectorAll ||
-		ElementPrototype.webkitAncestorQuerySelectorAll ||
-		function ancestorQuerySelectorAll(selector) {
-			for (var cite = this, newNodeList = new NodeList; cite = cite.parentElement;) {
-				if (cite.matchesSelector(selector)) ArrayPrototype.push.call(newNodeList, cite);
-			}
-
-			return newNodeList;
-		};
-
-	ElementPrototype.ancestorQuerySelector = ElementPrototype.ancestorQuerySelector ||
-		ElementPrototype.mozAncestorQuerySelector ||
-		ElementPrototype.msAncestorQuerySelector ||
-		ElementPrototype.oAncestorQuerySelector ||
-		ElementPrototype.webkitAncestorQuerySelector ||
-		function ancestorQuerySelector(selector) {
-			return this.ancestorQuerySelectorAll(selector)[0] || null;
-		};
-})(this, Element.prototype, Array.prototype);
-
-/* Helper Functions
-/* ========================================================================== */
-
-function generateTableRow(nombre, cantidad, precio) {
-	var emptyColumn = document.createElement('tr');
-
-	emptyColumn.innerHTML = `<td><a class="cut">-</a><span${nombre}></span></td>` +
-		`<td><span>${cantidad}</span></td>` +
-		`<td><span data-prefix>$</span><span>${precio}</span></td>`
-	return emptyColumn;
-}
-
-function parseFloatHTML(element) {
-	return parseFloat(element.innerHTML.replace(/[^\d\.\-]+/g, '')) || 0;
-}
-
-function parsePrice(number) {
-	return number.toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1,');
-}
-
-/* Update Number
-/* ========================================================================== */
-
-function updateNumber(e) {
-
-	var
-		activeElement = document.activeElement,
-		value = parseFloat(activeElement.innerHTML),
-		wasPrice = activeElement.innerHTML == parsePrice(parseFloatHTML(activeElement));
-
-	if (!isNaN(value) && (e.keyCode == 38 || e.keyCode == 40 || e.wheelDeltaY)) {
-		e.preventDefault();
-
-		value += e.keyCode == 38 ? 1 : e.keyCode == 40 ? -1 : Math.round(e.wheelDelta * 0.025);
-		value = Math.max(value, 0);
-
-		activeElement.innerHTML = wasPrice ? parsePrice(value) : value;
-	}
-
-	updateInvoice();
-}
-
-/* Update Invoice
-/* ========================================================================== */
-
-function updateInvoice() {
-	var total = 0;
-	var cells, price, total, a, i;
-
-	// update inventory cells
-	// ======================
-
-	for (var a = document.querySelectorAll('table.inventory tbody tr'), i = 0; a[i]; ++i) {
-		// get inventory row cells
-		cells = a[i].querySelectorAll('span:last-child');
-
-		// set price as cell[2] * cell[3]
-		price = parseFloatHTML(cells[1]) * parseFloatHTML(cells[2]);
-
-		// add price to total
-		total += price;
-
-		// set row total
-		cells[3].innerHTML = price;
-	}
-
-	// update balance cells
-	// ====================
-
-	// get balance cells
-	cells = document.querySelectorAll('table.balance td:last-child span:last-child');
-
-	// set total
-	cells[0].innerHTML = total;
-
-	// set balance and meta balance
-	cells[2].innerHTML = document.querySelector('table.meta tr:last-child td:last-child span:last-child').innerHTML = parsePrice(total - parseFloatHTML(cells[1]));
-
-	// update prefix formatting
-	// ========================
-
-	var prefix = document.querySelector('#prefix').innerHTML;
-	for (a = document.querySelectorAll('[data-prefix]'), i = 0; a[i]; ++i) a[i].innerHTML = prefix;
-
-	// update price formatting
-	// =======================
-
-	for (a = document.querySelectorAll('span[data-prefix] + span'), i = 0; a[i]; ++i) if (document.activeElement != a[i]) a[i].innerHTML = parsePrice(parseFloatHTML(a[i]));
-}
-
-/* On Content Load
-/* ========================================================================== */
-
-function onContentLoad() {
-	var
-		input = document.querySelector('input'),
-		image = document.querySelector('img');
-
-	function onClick(e) {
-		var element = e.target.querySelector('[contenteditable]'), row;
-
-		element && e.target != document.documentElement && e.target != document.body && element.focus();
-
-		if (e.target.matchesSelector('.seleccionar-btn')) {
-			document.querySelector('tabla-inventory tbody-inventory').appendChild(generateTableRow(nombre, cantidad, precio));
-		}
-		else if (e.target.className == 'cut') {
-			row = e.target.ancestorQuerySelector('tr');
-
-			row.parentNode.removeChild(row);
-			CalcularFactura()
+		// Evitar consultas vacías
+		if (query.length < 1) {
+			vaciarTabla(tabla)
+			return;
 		}
 
-		//updateInvoice();
+		// Realizar petición AJAX
+		fetch(`/buscar_clientes?q=${query}`)
+			.then(response => response.json())
+			.then(data => {
+				vaciarTabla(tabla)
+
+				// Insertar los nuevos resultados en la tabla
+				data.clientes.forEach(cliente => {
+					var nuevaFila = tabla.insertRow();
+					var celdaCUIT = nuevaFila.insertCell(0);
+					var celdaRazons = nuevaFila.insertCell(1);
+					var celdaAccion = nuevaFila.insertCell(2);
+
+					var boton = document.createElement("span");
+					boton.textContent = "✅";
+					boton.className = "emoji-clickable";
+					boton.addEventListener("click", function () {
+						seleccionarFilaCliente(this);
+					});
+
+					celdaCUIT.textContent = cliente.cuit;
+					celdaRazons.textContent = cliente.razons;
+					celdaAccion.appendChild(boton);
+					//celdaAccion.innerHTML = `<td><button class="seleccionar-btn" 
+					//	onclick="seleccionarFilaCliente(this)">Seleccionar</button></td>`;
+				});
+			});
+	};
+
+	BCliente.onclick = function () {
+		ModalCliente.style.display = "block";
+		SearchBar_Client.value = ''
+		const cuerpo = TablaModalClient.querySelector("tbody");
+		cuerpo.innerHTML = "";
+	};
+
+	cerrarModalClientes.onclick = function () {
+		ModalCliente.style.display = "none";
+	};
+
+	function seleccionarFilaCliente(boton) {
+		// Obtener la fila que contiene el botón
+		var cuit = boton.parentNode.parentNode.cells[0].innerText;
+
+		// Llamada AJAX a Django para procesar los datos
+		fetch(`/seleccionar_cliente?q=${cuit}`)
+			.then(response => response.json())
+			.then(data => {
+				document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
+				document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
+				document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
+				document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
+				document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
+				document.getElementById("BCliente").disabled = true;
+				document.getElementById("BProductos").disabled = false;
+			})
+			.catch(error => console.error("Error en la solicitud:", error));
+
+		document.getElementById("ModalCliente").style.display = "none";
 	}
 
-	function onEnterCancel(e) {
-		e.preventDefault();
 
-		image.classList.add('hover');
-	}
+	/* Funciones del boton Productos */
 
-	function onLeaveCancel(e) {
-		e.preventDefault();
+	const regex = /^(?:\d{1,8}|\d{1,8}\.\d{1,4})$/;
 
-		image.classList.remove('hover');
-	}
+	SearchBar_Products.onkeyup = function () {
+		var query = SearchBar_Products.value;  // Obtener valor ingresado
+		var query2 = document.getElementById("list").innerText;
+		var tabla = document.getElementById("TablaModalProductos").getElementsByTagName('tbody')[0];
 
-	function onFileInput(e) {
-		image.classList.remove('hover');
 
-		var
-			reader = new FileReader(),
-			files = e.dataTransfer ? e.dataTransfer.files : e.target.files,
-			i = 0;
-
-		reader.onload = onFileLoad;
-
-		while (files[i]) reader.readAsDataURL(files[i++]);
-	}
-
-	function onFileLoad(e) {
-		var data = e.target.result;
-
-		image.src = data;
-	}
-
-	function inputCantidad(event) {
-		if (event.target.matches("td[contenteditable]")) {
-			let contenido = event.target.textContent;
-
-			// Filtra solo números y un único punto decimal
-			contenido = contenido.replace(/[^0-9.]/g, '');
-
-			// Limita a un solo punto decimal y solo permite 3 decimales después de él
-			const partes = contenido.split('.');
-			if (partes.length > 2) {
-				contenido = partes[0] + '.' + partes.slice(1).join('');
-			} else if (partes.length === 2) {
-				partes[1] = partes[1].substring(0, 3); // Limita los decimales a 3 dígitos
-				contenido = partes.join('.');
-			}
-
-			// Usamos setTimeout para evitar la interrupción del cursor
-			setTimeout(() => {
-				event.target.textContent = contenido;
-
-				// Restaurar el cursor al final
-				const range = document.createRange();
-				const selection = window.getSelection();
-
-				range.selectNodeContents(event.target);
-				range.collapse(false);
-				selection.removeAllRanges();
-				selection.addRange(range);
-			}, 0);
+		// Evitar consultas vacías
+		if (query.length < 1) {
+			vaciarTabla(tabla)
+			return;
 		}
-	}
+		// Realizar petición AJAX
+		fetch(`/buscar_productos?q=${query}&w=${query2}`)
+			.then(response => response.json())
+			.then(data => {
+				vaciarTabla(tabla)
+				// Insertar los nuevos resultados en la tabla
+				data.productos.forEach(producto => {
+					var nuevaFila = tabla.insertRow();
+					const input = document.createElement("input");
+					var celdaNombre = nuevaFila.insertCell(0);
+					var celdaCant = nuevaFila.insertCell(1);
+					var celdaPrecio = nuevaFila.insertCell(2);
+					var celdaIva = nuevaFila.insertCell(3);
+					var celdaAccion = nuevaFila.insertCell(4);
 
-	if (window.addEventListener) {
-		//document.addEventListener('click', onClick);
+					var boton = document.createElement("span");
+					boton.textContent = "✅";
+					boton.className = "emoji-clickable";
+					boton.addEventListener("click", function () {
+						const cuerpo = TablaProductos.querySelector("tbody");
+						if (!input.classList.contains("invalido")) {
+							if (!cuerpo || cuerpo.rows.length == 0) {
+								agregarHeader(TablaProductos)
+							}
+							seleccionarFilaProducto(this, TablaProductos);
+						}
+					});
 
-		document.addEventListener('input', inputCantidad);
+					celdaNombre.innerHTML = `<td>${producto.nombre}</td>`;
 
-		//document.addEventListener('mousewheel', updateNumber);
-		//document.addEventListener('keydown', updateNumber);
-
-		//document.addEventListener('keydown', updateInvoice);
-		//document.addEventListener('keyup', updateInvoice);
-
-		input.addEventListener('focus', onEnterCancel);
-		input.addEventListener('mouseover', onEnterCancel);
-		input.addEventListener('dragover', onEnterCancel);
-		input.addEventListener('dragenter', onEnterCancel);
-
-		input.addEventListener('blur', onLeaveCancel);
-		input.addEventListener('dragleave', onLeaveCancel);
-		input.addEventListener('mouseout', onLeaveCancel);
-
-		input.addEventListener('drop', onFileInput);
-		input.addEventListener('change', onFileInput);
-	}
-}
-
-window.addEventListener && document.addEventListener('DOMContentLoaded', onContentLoad);
-
-
-
-//					Funciones adicionales propias
-// =====================================================================
-
-let celdaActual = null;
-
-// Función para abrir el modal de busqueda de Clientes
-function abrirModal() {
-	document.getElementById("miModal").style.display = "block";
-}
-
-function cerrarModal() {
-	document.getElementById("miModal").style.display = "none";
-}
-
-// Función para abrir y cerrar el modal de busqueda de Productos
-function abrirModalP() {
-	document.getElementById("miModalP").style.display = "block";
-	document.getElementById("busquedaP").value = ''
-	var tabla = document.getElementById("tablap").getElementsByTagName('tbody')[0];
-	tabla.innerHTML = "";
-
-}
-
-function cerrarModalP() {
-	document.getElementById("miModalP").style.display = "none";
-}
+					//const input = document.createElement("input");
+					input.type = "text";
+					input.value = '1'
+					input.contentEditable = true
+					input.className = "input-celda";
 
 
-/* Funciones para abrir el modal de cantidad y modificar cantidad */
+					//input.className = "input-celda";
+					//input.placeholder = "Ej: 123.4567";
 
-function abrirModalCant(celda) {
-	celdaActual = celda;
-	var valor = celda.querySelector("span").innerText;
-	document.getElementById("input-cantidad").value = valor;
-	document.getElementById("modalcantidad").style.display = "flex";
-}
+					//celdaCant.textContent = "1"; // Establecer el texto inicial
+					//celdaCant.setAttribute("contenteditable", "true"); // Hacer editable
+					//celdaCant.setAttribute("onclick", "borrarContenido(this)")
 
-document.getElementById("bt-fin-cant").onclick = function () {
-	var fila = celdaActual.parentNode.parentNode;
-	var nuevoValor = document.getElementById("input-cantidad").value;
+					input.addEventListener("input", function () {
+						const valor = input.value;
+						if (!regex.test(valor)) {
+							input.classList.add("invalido");
+							boton.textContent = "❌";
+							boton.disabled = true;
+							boton.classList.add("sin-pointer");
+						} else {
+							input.classList.remove("invalido");
+							boton.textContent = "✅";
+							boton.disabled = false;
+							boton.classList.remove("sin-pointer");
 
-	if (celdaActual) {
-		celdaActual.querySelector("span").innerText = nuevoValor;
-	}
+						}
+					});
+					celdaCant.appendChild(input)
+					celdaPrecio.innerHTML = `<td>${producto.precio}</td>`;
+					celdaIva.innerHTML = `<td>${producto.iva}</td>`;
+					celdaAccion.appendChild(boton);
+				});
+			});
+	};
 
-	var precioUn = parseFloat(fila.cells[2].querySelector("span").innerText);
-	var total = redondearDecimales(parseFloat(precioUn * nuevoValor), 2)
-	fila.cells[3].querySelectorAll("span")[1].innerText = total
+	BProductos.onclick = function () {
+		ModalProductos.style.display = "block";
+		SearchBar_Products.value = ''
+		const cuerpo = TablaModalProductos.querySelector("tbody");
+		cuerpo.innerHTML = "";
+	};
 
-	CalcularFactura()
-	document.getElementById("modalcantidad").style.display = "none";
-};
+	document.getElementById("BCerrarProd").onclick = () => {
+		ModalProductos.style.display = "none";
+	};
 
-function abrirModalPres(celda) {
-	celdaActual = celda;
-	var valor = celda.querySelector("span").innerText;
-	document.getElementById("input-precio").value = valor;
-	document.getElementById("modalprecio").style.display = "flex";
-}
+	function seleccionarFilaProducto(boton, tabla) {
+		// Obtener la fila que contiene el botón
+		const fila = boton.closest("tr");
+		const nombre = fila.cells[0].innerText;
+		const cantidad = fila.cells[1].firstChild.value
+		const precio = fila.cells[2].innerText / 1.21
+		const iva = fila.cells[3].innerText;
 
-document.getElementById("bt-fin-precio").onclick = function () {
-	var fila = celdaActual.parentNode.parentNode;
-	var nuevoValor = document.getElementById("input-precio").value;
-
-	if (celdaActual) {
-		celdaActual.querySelector("span").innerText = nuevoValor
-	}
-	var cantidad = parseFloat(fila.cells[1].querySelector("span").innerText);
-	var total = redondearDecimales(parseFloat(cantidad * nuevoValor), 2)
-
-
-	fila.cells[3].querySelectorAll("span")[1].innerText = total
-
-	CalcularFactura()
-	document.getElementById("modalprecio").style.display = "none";
-};
+		const nuevaFila = tabla.insertRow();
+		var aux = parseFloat(cantidad) * parseFloat(precio)
 
 
+		// Celda: Descripción
+		const CeldaDesc = nuevaFila.insertCell()
+		const DescSpan = crearSpan()
 
-/* Llamadas AJAX, busqueda de productos, clientes y seleccion de fila para el facturador */
-function buscarClientes() {
-	var query = document.getElementById("busqueda").value;  // Obtener valor ingresado
-	var tabla = document.getElementById("tabla").getElementsByTagName('tbody')[0];
+		DescSpan.textContent = nombre
+		CeldaDesc.appendChild(DescSpan);
 
-	// Evitar consultas vacías
-	if (query.length < 1) {
-		tabla.innerHTML = "";  // Vaciar tabla si el campo está vacío
-		return;
-	}
+		// Celda: Cantidad
+		const celdaCantidad = nuevaFila.insertCell();
+		const CantCont = crearContenedor()
+		const CantSpan = crearSpan()
+		const BotonCant = crearBoton()
 
-	// Realizar petición AJAX
-	fetch(`/buscar_clientes?q=${query}`)
-		.then(response => response.json())
-		.then(data => {
-			tabla.innerHTML = "";
-			// Insertar los nuevos resultados en la tabla
-			data.clientes.forEach(cliente => {
-				var nuevaFila = tabla.insertRow();
-				var celdaCUIT = nuevaFila.insertCell(0);
-				var celdaRazons = nuevaFila.insertCell(1);
-				var celdaAccion = nuevaFila.insertCell(2);
-				celdaCUIT.innerHTML = `<td>${cliente.cuit}</td>`;
-				celdaRazons.innerHTML = `<td>${cliente.razons}</td>`;
-				celdaAccion.innerHTML = `<td><button class="seleccionar-btn" onclick="seleccionarFila(this)">Seleccionar</button></td>`;
+		CantSpan.textContent = cantidad;
+		BotonCant.textContent = "✏️";
+		BotonCant.addEventListener("click", function () {
+			ModalCantidad.style.display = "block";
+			InputCant.value = cantidad
+			InputCant.addEventListener("input", function () {
+				const valor = input.value;				//ARREGLAR EL INPUT
+				if (!regex.test(valor)) {
+					input.classList.add("invalido");
+					BCerrarCant.disabled = true;
+					BCerrarCant.classList.add("sin-pointer");
+				} else {
+					input.classList.remove("invalido");
+					BCerrarCant.disabled = false;
+					BCerrarCant.classList.remove("sin-pointer");
+
+				}
 			});
 		});
-}
 
-function buscarProductos() {
-	var query = document.getElementById("busquedaP").value;  // Obtener valor ingresado
-	var query2 = document.getElementById("list").innerText;
-	var tabla = document.getElementById("tablap").getElementsByTagName('tbody')[0];
+		CantCont.appendChild(CantSpan)
+		CantCont.appendChild(BotonCant)
+		celdaCantidad.appendChild(CantCont)
 
-	// Evitar consultas vacías
-	if (query.length < 1) {
-		tabla.innerHTML = "";  // Vaciar tabla si el campo está vacío
-		return;
-	}
+		// Celda: Precio unitario
+		const celdaPreUn = nuevaFila.insertCell();
+		const PreUnCont = crearContenedor()
+		const PreUnSpan = crearSpan()
+		const BotonPreUn = crearBoton()
 
-	// Realizar petición AJAX
-	fetch(`/buscar_productos?q=${query}&w=${query2}`)
-		.then(response => response.json())
-		.then(data => {
-			tabla.innerHTML = "";
-			// Insertar los nuevos resultados en la tabla
-			data.productos.forEach(producto => {
-				var nuevaFila = tabla.insertRow();
-				var celdaNombre = nuevaFila.insertCell(0);
-				var celdaCant = nuevaFila.insertCell(1);
-				var celdaPrecio = nuevaFila.insertCell(2);
-				var celdaAccion = nuevaFila.insertCell(3);
-				celdaNombre.innerHTML = `<td>${producto.nombre}</td>`;
-				celdaCant.textContent = "1"; // Establecer el texto inicial
-				celdaCant.setAttribute("contenteditable", "true"); // Hacer editable
-				celdaCant.setAttribute("onclick", "borrarContenido(this)")
-				celdaPrecio.innerHTML = `<td>${producto.precio}</td>`;
-				celdaAccion.innerHTML = `<td><button class="seleccionar-btn" onclick="seleccionarFilaP(this)">Seleccionar</button></td>`;
-			});
+		PreUnSpan.textContent = redondearDecimales(precio, 4);
+		BotonPreUn.textContent = "✏️";
+		BotonPreUn.addEventListener("click", function () {
+			console.log('asdadsads11111')
 		});
-}
+		PreUnCont.appendChild(PreUnSpan)
+		PreUnCont.appendChild(BotonPreUn)
+		celdaPreUn.appendChild(PreUnCont)
 
-function seleccionarFila(boton) {
-	// Obtener la fila que contiene el botón
-	var cuit = boton.parentNode.parentNode.cells[0].innerText;
+		// Celda: Iva %
+		const celdaIva = nuevaFila.insertCell();
+		const IvaSpan = crearSpan()
 
-	// Llamada AJAX a Django para procesar los datos
-	fetch(`/seleccionar_cliente?q=${cuit}`)
-		.then(response => response.json())
-		.then(data => {
-			document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
-			document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
-			document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
-			document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
-			document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
-			document.getElementById("BCliente").disabled = true;
-			document.getElementById("BProductos").disabled = false;
-		})
-		.catch(error => console.error("Error en la solicitud:", error));
-
-	document.getElementById("miModal").style.display = "none";
-}
-
-function seleccionarFilaP(boton) {
-	// Obtener la fila que contiene el botón
-	var nombre = boton.parentNode.parentNode.cells[0].innerText;
-	var cantidad = boton.parentNode.parentNode.cells[1].innerText;
-	var precio = boton.parentNode.parentNode.cells[2].innerText;
-
-	precio = precio / 1.21
-
-	tabla = document.getElementById("tabla-inventory").getElementsByTagName('tbody')[0];
-
-	var nuevaFila = tabla.insertRow();
-	var celdaDesc = nuevaFila.insertCell(0);
-	var celdaCant = nuevaFila.insertCell(1);
-	var celdaPrice = nuevaFila.insertCell(2);
-	var celdaPrice2 = nuevaFila.insertCell(3);
-	var aux = parseFloat(cantidad) * parseFloat(precio)
-	celdaDesc.innerHTML = `<td><a class="cut">-</a><span>${nombre}</span></td>`;
-	celdaCant.innerHTML = `
-	<td>
-		<div class="celda-cantidad">
-		<span class="cantidad-texto">${cantidad}</span>
-		<button class="btn-cantidad" onclick="abrirModalCant(this.parentNode)">✏️</button>
-		</div>
-	</td>
-	`;
-	celdaPrice.innerHTML = `
-	<td>
-		<div class="celda-cantidad">
-		<span class="cantidad-texto">${redondearDecimales(precio, 4)}</span>
-		<button class="btn-cantidad" onclick="abrirModalPres(this.parentNode)">✏️</button>
-		</div>
-	</td>
-	`;
-
-	//celdaPrice.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(precio, 4)}</span></td>`;
-	celdaPrice2.innerHTML = `<td><span data-prefix>$</span><span>${redondearDecimales(aux, 2)}</span></td>`;
-
-	boton.parentNode.parentNode.remove()
-
-	CalcularFactura()
-}
+		IvaSpan.textContent = iva
+		celdaIva.appendChild(IvaSpan);
 
 
+		// Celda: Total
+		const celdaTotal = nuevaFila.insertCell();
+		const TotalCont = crearContenedor()
+		const TotalSpan = crearSpan()
+		const TotalBoton = crearBoton()
 
+		TotalSpan.textContent = redondearDecimales(aux, 2);
+		TotalBoton.textContent = "❌";
+		TotalBoton.addEventListener("click", function () {
+			borrarContenido(this);
+		});
+		TotalCont.appendChild(TotalSpan);
+		TotalCont.appendChild(TotalBoton);
+		celdaTotal.appendChild(TotalCont);
 
-/* Funciones de utilidad */
+		borrarContenido(boton)
 
-function redondearDecimales(numero, decimales) {
-	numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
-	if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
-		return Number(numero.toFixed(decimales));
-	} else {
-		return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+		CalcularFactura()
 	}
-}
 
-function CalcularFactura() {
-	var tabla = document.getElementById("tbody-inventory")
-	var total = 0
 
-	for (let i = 0; i < tabla.rows.length; i++) {
-		let fila = tabla.rows[i]
-		let celda = fila.cells[3].querySelectorAll("span")[1].innerText
-		total += parseFloat(celda)
+
+	function abrirModalCant() {
+		ModalCantidad.style.display = "block";
 	}
-	var total2 = total * 1.21
-
-	document.getElementById('subtotalSpan').innerHTML = `$ ${redondearDecimales(total, 2)}`
-
-	var iva = (total * 0.21) / 1.21
-	document.getElementById('ivaSpan').innerHTML = `$ ${redondearDecimales(iva, 2)}`
-
-	document.getElementById('totalSpan').innerHTML = `$ ${redondearDecimales(total2, 2)}`
-	document.getElementById('totalSpan2').innerHTML = `$ ${redondearDecimales(total2, 2)}`
-}
-
-function borrarContenido(celda) {
-	celda.innerText = ""; // Borra el contenido de la celda
-}
 
 
-/* Patterns para cantidad y precio */
-const input = document.getElementById("input-cantidad");
-const inputP = document.getElementById("input-precio");
 
 
-input.addEventListener("input", () => {
-	const valor = input.value;
-	const regex = /^\d{0,4}(\.\d{0,3})?$/;
 
-	if (!regex.test(valor)) {
-		// Elimina el último carácter si rompe el patrón
-		input.value = valor.slice(0, -1);
-	}
-});
-inputP.addEventListener("input", () => {
-	const valor = inputP.value;
-	const regex = /^([1-9]+[0-9]+|[0-9])([\\.][0-9]{1,4})?$/;
-	const btt = document.getElementById("bt-fin-precio")
-	if (!regex.test(valor)) {
-		btt.disabled = true
-	} else {
-		btt.disabled = false
-	}
-	try {
-		if (valor.split('.')[1].length > 4) {
-			inputP.value = valor.slice(0, -1)
-			btt.disabled = false
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/* Funciones Auxiliares */
+
+
+	function vaciarTabla(tabla) {
+		while (tabla.firstChild) {
+			tabla.removeChild(tabla.firstChild);
 		}
 	}
-	catch { null }
+
+	function borrarContenido(boton) {
+		const fila = boton.closest("tr");
+		const cuerpo = TablaProductos.querySelector("tbody");
+		fila.remove();
+		if (cuerpo.rows.length == 1) {
+			TablaProductos.querySelector("tr").remove()
+		}
+	}
+
+	function agregarHeader(tabla) {
+		const filaEncabezado = tabla.insertRow();
+		const encabezados = [
+			"Descripción",
+			"Cantidad",
+			"Precio Unitario (s/iva)",
+			"Iva %",
+			"Total (s/iva)"
+		];
+		encabezados.forEach(texto => {
+			const th = document.createElement("th");
+			const span = document.createElement("span");
+			span.textContent = texto;
+			th.appendChild(span);
+			filaEncabezado.appendChild(th);
+		});
+	}
+
+	function redondearDecimales(valor, decimales) {
+		const factor = Math.pow(10, decimales);
+		const redondeado = Math.round(parseFloat(valor) * factor) / factor;
+		return redondeado.toFixed(decimales);
+	}
+
+
+	/*
+	function redondearDecimales(numero, decimales) {
+		numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
+		if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+			return Number(numero.toFixed(decimales));
+		} else {
+			return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, 
+			// se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+		}
+	}
+	*/
+
+
+	function CalcularFactura() {
+		var total21 = 0, total105 = 0, subtotal = 0;
+
+		for (let i = 1; i < TablaProductos.rows.length; i++) {
+			let fila = TablaProductos.rows[i]
+			let celda = fila.cells[4].querySelector("span").innerText
+			let iva = fila.cells[3].querySelector("span").innerText
+			subtotal += parseFloat(celda)
+			if (iva == '21.0') {
+				total21 += subtotal
+			} else {
+				total105 += subtotal
+			}
+
+		}
+
+		document.getElementById('subtotal').innerHTML = `$ ${redondearDecimales(subtotal, 2)}`
+		var iva21 = total21 * 0.21
+		var iva105 = total105 * 0.105
+		var total = subtotal + iva21 + iva105
+
+		document.getElementById('iva21').innerHTML = `$ ${redondearDecimales(iva21, 2)}`
+		document.getElementById('iva105').innerHTML = `$ ${redondearDecimales(iva105, 2)}`
+
+		document.getElementById('total').innerHTML = `$ ${redondearDecimales(total, 2)}`
+	}
+
+
+
+	// Encapsulamiento de logica
+
+	function crearContenedor() {
+		const contenedor = document.createElement("div");
+		contenedor.className = "celda-cantidad";
+		return contenedor;
+	}
+
+	function crearSpan() {
+		const span = document.createElement("span");
+		span.className = "cantidad-texto";
+		return span
+	}
+
+	function crearBoton() {
+		const boton = document.createElement("button");
+		boton.className = "btn-cantidad";
+		return boton
+	}
+
+
+	//window.onclick = function (event) {
+	//	if (event.target === modal) {
+	//		modal.style.display = "none";
+	//	}
+	//};
+
+
 
 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

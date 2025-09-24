@@ -8,3 +8,4 @@ package.json
 migrations
 mysite/static/cert/**
 mysite/migrations
+mysite/__pycache__/views.cpython-310.pyc
