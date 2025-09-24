@@ -4,6 +4,9 @@ Initial Project for Web-Based Management and Invoicing System this is an initial
 
 The initial idea is to use the same database currently used by the company. For now, HTML is being used for the frontend, but it could be replaced with a more robust framework if the client or situation requires it.
 
+Important: The Ui is in spanish.
+
+
 ### Features:
 - Can already connect to AFIP to request the latest issued invoice \
 (for security reasons, the .crt and .key files that go in the "cert" folder have been removed)
