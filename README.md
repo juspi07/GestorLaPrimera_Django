@@ -17,11 +17,13 @@ The database address should also be updated in the <ins>settings</ins> file.
 
 ### Images (Reminder: everything is still in progress):
 
-![](https://i.imgur.com/xPmkSrt.jpeg)
+![](https://i.imgur.com/VmQH0fP.png)
 
-![](https://i.imgur.com/TUzswWs.jpeg)
+![](https://i.imgur.com/dqw5JcV.png)
 
-![](https://i.imgur.com/iOUBEGR.jpeg)
+![](https://i.imgur.com/dFI08xA.png)
+
+![](https://i.imgur.com/2F6BacL.png)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
