@@ -12,6 +12,7 @@ Important: The Ui is in spanish.
 (for security reasons, the .crt and .key files that go in the "cert" folder have been removed)
 - Clients and products can be searched directly from the web interface (via AJAX calls)
 - When products are selected, the system also calculates TAX and the total amount
+- Can change price and quantity (with correspondingly validators) for every selected product
 
 
 
@@ -19,6 +20,8 @@ The database address should also be updated in the <ins>settings</ins> file.
 
 
 ### Images (Reminder: everything is still in progress):
+
+![](https://i.imgur.com/uIpcFQj.png)
 
 ![](https://i.imgur.com/VmQH0fP.png)
 

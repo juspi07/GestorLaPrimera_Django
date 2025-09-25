@@ -156,7 +156,7 @@
 		<h2>Modificar Cantidad</h2>
 		<div class="busqueda-modal">
 			<input class="input-celda" type="text" id="InputCant""
-				autocomplete="off">
+				autocomplete=" off">
 		</div>
 		<button class="FinalizarB" id="BCerrarCant">Finalizar</button>
 	</div>
@@ -165,16 +165,31 @@
 <!-- Modal Precio oculto -->
 <div id="ModalPrecio" class="modal">
 	<div class="modal-contenido">
-		<h2>Buscar Productos</h2>
+		<h2>Modificar Precio</h2>
 		<div class="busqueda-modal">
-			<input type="text" id="SearchBar_Products""
-				placeholder=" Buscar..." autocomplete="off">
+			<input class="input-celda" type="text" id="InputPrecio" 
+				placeholder="Ingresar precio" autocomplete="off">
 		</div>
+		<div class="grupo-radio">
+			<label><input type="radio" name="opcion" value="1" checked> Adaptar</label>
+			<label><input type="radio" name="opcion" value="2"> No adaptar</label>
+		</div>
+
 		<button class="FinalizarB" id="BCerrarPrec">Finalizar</button>
 	</div>
 </div>
 
-
+<!-- Modal Arca oculto -->
+<div id="modalarca" class="modal">
+        <div class="modal-contenido">
+            <h2 class="titulo-busqueda">Conexión ARCA</h2>
+            <br></br>
+            <div style="text-align: center;" id="estado-wsaa">
+                <h4>Conectando ...</h4>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="{% static 'facturador/facturador.js' %}"></script>
 {% endblock %}

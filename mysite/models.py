@@ -6,6 +6,8 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.core.validators import RegexValidator
+from django.forms import ValidationError
 #from django.db.models import UniqueConstraint, Index
 
 
@@ -152,3 +154,18 @@ class Zonas(models.Model):
     class Meta:
         managed = False
         db_table = 'zonas'
+
+class Configuracion(models.Model):
+    punto_venta = models.CharField(
+        max_length=5,
+        validators=[RegexValidator(r'^\d+$', message='Unicamente se aceptan numeros.')]
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.pk and Configuracion.objects.exists():
+            raise ValidationError("Ya existe una configuración. No se puede crear otra.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return 'Configuracion de la aplicación'
+

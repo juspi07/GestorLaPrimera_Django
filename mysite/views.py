@@ -50,21 +50,6 @@ def buscar_productos(request):
     resultados = list(productos.values())  # Convertir a JSON
     return JsonResponse({'productos': resultados})  # Retornar los datos en JSON
 
-def conectar_Afip():
-    try:
-        ruta_base = os.path.dirname(__file__)  # Carpeta donde está views.py
-        Crt = os.path.join(ruta_base, 'static\cert\\testingCRT.crt')
-        Key = os.path.join(ruta_base, 'static\cert\\testingKey.key')
-    
-        Wsfe = WSFEv1()
-        Wsfe.SetTicketAcceso(
-            WSAA().Autenticar("wsfe", Crt, Key))
-        Wsfe.Cuit = 20218452788        
-        Wsfe.Conectar()
-
-        return True
-    except:
-        return False
 
 async def conectar_wsaa(request):
     ruta_base = os.path.dirname(__file__)  # Carpeta donde está views.py
@@ -86,5 +71,5 @@ async def conectar_wsaa(request):
             msg = 'Error: La clave privada no coincide con el certificado'
         elif str(e).startswith('Unable to find the server'):
             err = 2
-            msg = 'El servidor de AFIP no está disponible, revise que tenga internet tambien.'
+            msg = 'El servidor de ARCA no está disponible, revise que tenga internet tambien.'
     return JsonResponse({'mensaje': msg, 'err': err})

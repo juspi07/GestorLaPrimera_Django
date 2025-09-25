@@ -1,12 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 	const BCliente = document.getElementById("BCliente");
 	const BProductos = document.getElementById("BProductos");
-	const BCantidad = document.getElementById("BCantidad");
-	const BPrecio = document.getElementById("BPrecio");
 	const cerrarModalClientes = document.getElementById("CerrarModalClientes");
-	const cerrarModalProducts = document.getElementById("CerrarModalProductos");
-	const cerrarModalCantidad = document.getElementById("CerrarModalCantidad");
-	const cerrarModalPrecio = document.getElementById("CerrarModalPrecio");
 	const ModalCliente = document.getElementById("ModalCliente");
 	const ModalProductos = document.getElementById("ModalProductos");
 	const ModalCantidad = document.getElementById("ModalCantidad");
@@ -17,8 +12,29 @@ document.addEventListener("DOMContentLoaded", function () {
 	const TablaModalProductos = document.getElementById("TablaModalProductos");
 	const TablaModalClient = document.getElementById("TablaModalClient");
 	const InputCant = document.getElementById("InputCant");
+	const InputPrecio = document.getElementById("InputPrecio");
 	const BCerrarCant = document.getElementById("BCerrarCant");
 	const BCerrarPrec = document.getElementById("BCerrarPrec");
+
+	const regex = /^(?:\d{1,8}|\d{1,8}\.\d{1,4})$/;
+
+	/* Funciones de ARCA */
+
+	document.querySelector('#modalarca').style.display = 'block';
+	fetch('/conectar-wsaa')
+		.then(res => res.json())
+		.then(data => {
+			console.log(data)
+			const estado = document.getElementById('estado-wsaa');
+			if (data.err == 0) {
+				estado.innerHTML = `<h3 style="color: green">¡Listo!</h3>`;
+				setTimeout(() => {
+					document.querySelector("#modalarca").style.display = "none";
+				}, 1200);
+			} else {
+				estado.innerHTML = `<h3 style="color: red;">${data.mensaje}</h3>`;
+			}
+	});
 
 
 
@@ -31,9 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	BCerrarPrec.onclick = () => {
 		ModalPrecio.style.display = "none";
 	};
-
-
-
 
 
 
@@ -112,8 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 	/* Funciones del boton Productos */
-
-	const regex = /^(?:\d{1,8}|\d{1,8}\.\d{1,4})$/;
 
 	SearchBar_Products.onkeyup = function () {
 		var query = SearchBar_Products.value;  // Obtener valor ingresado
@@ -235,13 +246,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			ModalCantidad.style.display = "block";
 			InputCant.value = cantidad
 			InputCant.addEventListener("input", function () {
-				const valor = input.value;				//ARREGLAR EL INPUT
+				const valor = InputCant.value;
 				if (!regex.test(valor)) {
-					input.classList.add("invalido");
+					InputCant.classList.add("invalido");
 					BCerrarCant.disabled = true;
 					BCerrarCant.classList.add("sin-pointer");
 				} else {
-					input.classList.remove("invalido");
+					InputCant.classList.remove("invalido");
 					BCerrarCant.disabled = false;
 					BCerrarCant.classList.remove("sin-pointer");
 
@@ -259,10 +270,24 @@ document.addEventListener("DOMContentLoaded", function () {
 		const PreUnSpan = crearSpan()
 		const BotonPreUn = crearBoton()
 
-		PreUnSpan.textContent = redondearDecimales(precio, 4);
+		const PrecioR = redondearDecimales(precio, 4)
+		PreUnSpan.textContent = PrecioR;
 		BotonPreUn.textContent = "✏️";
 		BotonPreUn.addEventListener("click", function () {
-			console.log('asdadsads11111')
+			ModalPrecio.style.display = "block";
+			InputPrecio.value = PrecioR
+			InputPrecio.addEventListener("input", function () {
+				const valor = InputPrecio.value;
+				if (!regex.test(valor)) { //ESTO NO LE ANDA
+					InputPrecio.classList.add("invalido");
+					BCerrarPrec.disabled = true;
+					BCerrarPrec.classList.add("sin-pointer");
+				} else {
+					InputPrecio.classList.remove("invalido");
+					BCerrarPrec.disabled = false;
+					BCerrarPrec.classList.remove("sin-pointer");
+				}
+			})
 		});
 		PreUnCont.appendChild(PreUnSpan)
 		PreUnCont.appendChild(BotonPreUn)
@@ -286,6 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		TotalBoton.textContent = "❌";
 		TotalBoton.addEventListener("click", function () {
 			borrarContenido(this);
+			CalcularFactura()
 		});
 		TotalCont.appendChild(TotalSpan);
 		TotalCont.appendChild(TotalBoton);
@@ -295,6 +321,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		CalcularFactura()
 	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -384,21 +422,17 @@ document.addEventListener("DOMContentLoaded", function () {
 			let iva = fila.cells[3].querySelector("span").innerText
 			subtotal += parseFloat(celda)
 			if (iva == '21.0') {
-				total21 += subtotal
+				total21 += parseFloat(celda) * 0.21
 			} else {
-				total105 += subtotal
+				total105 += parseFloat(celda) * 0.105
 			}
-
 		}
 
 		document.getElementById('subtotal').innerHTML = `$ ${redondearDecimales(subtotal, 2)}`
-		var iva21 = total21 * 0.21
-		var iva105 = total105 * 0.105
-		var total = subtotal + iva21 + iva105
 
-		document.getElementById('iva21').innerHTML = `$ ${redondearDecimales(iva21, 2)}`
-		document.getElementById('iva105').innerHTML = `$ ${redondearDecimales(iva105, 2)}`
-
+		var total = subtotal + total21 + total105
+		document.getElementById('iva21').innerHTML = `$ ${redondearDecimales(total21, 2)}`
+		document.getElementById('iva105').innerHTML = `$ ${redondearDecimales(total105, 2)}`
 		document.getElementById('total').innerHTML = `$ ${redondearDecimales(total, 2)}`
 	}
 

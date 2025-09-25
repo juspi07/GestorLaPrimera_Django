@@ -149,7 +149,6 @@
     font-size: 12px;
 }
 
-
 .division-seccion {
     border: none;
     border-top: 1px solid #ccc;
@@ -176,9 +175,7 @@
     text-align: center;
     flex-grow: 1;
 }
-
-
-
+ 
 .boton-inferior {
     text-align: center;
     margin-top: 20px;
@@ -220,7 +217,7 @@
 
 .tabla-scroll {
     margin-top: 15px;
-    max-height: 550px;
+    max-height: 400px;
     overflow-y: auto;
     padding-right: 3px;
     /* border: 1px solid #ccc;   opcional, para delimitar */
@@ -246,4 +243,23 @@
     text-decoration: none; /* Sin subrayado */
     font-weight: bold; /* Texto en negrita */
 	cursor: pointer;
+}
+
+.FinalizarB:disabled {
+  background-color: #bdc3c7; /* gris apagado */
+  color: #666;               /* texto apagado */
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.grupo-radio {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Espacio entre radios */
+  margin-top: 10px;
+}
+
+.grupo-radio label {
+  font-size: 14px;
+  cursor: pointer;
 }

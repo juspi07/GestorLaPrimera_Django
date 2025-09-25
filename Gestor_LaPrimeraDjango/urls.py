@@ -25,6 +25,6 @@ urlpatterns = [
     path('buscar_clientes/', views.buscar_clientes, name='buscar_clientes'),
     path('seleccionar_cliente/', views.select_cliente, name='select_clientes'),
     path('buscar_productos/', views.buscar_productos, name='buscar_productos'),
-    path('conectar/', views.conectar_Afip, name='conectar'),
+    #path('conectar/', views.conectar_Afip, name='conectar'),
     path('conectar-wsaa/', views.conectar_wsaa, name='conectar_wsaa'),
 ]
