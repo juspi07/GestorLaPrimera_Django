@@ -5,9 +5,12 @@ from django.http import JsonResponse
 from .Afip.wsaa import WSAA
 from .Afip.wsfev1 import WSFEv1
 import os
-import asyncio
+from asgiref.sync import sync_to_async
 
-#Productos.objects.using('mysql').all()
+
+
+
+
 
 def home(request):
     return render(request, 'home.html')
@@ -15,14 +18,11 @@ def home(request):
 def facturador(request):
     fecha = datetime.today().strftime('%d/%m/%Y')
     clientes = Clientes.objects.using('mysql').all()
-    
+
     contexto = {'fecha':fecha,
         'clientes':clientes}
     return render(request, 'facturador.html', contexto)
-    #if conectar_Afip():
-    #    return render(request, 'facturador.html', contexto)
-    #else:
-    #    pass
+
 
 def buscar_clientes(request):
     query = request.GET.get('q', '')  # Obtener el parámetro de búsqueda
@@ -50,6 +50,10 @@ def buscar_productos(request):
     resultados = list(productos.values())  # Convertir a JSON
     return JsonResponse({'productos': resultados})  # Retornar los datos en JSON
 
+@sync_to_async
+def obtener_Config():
+    return Configuracion.objects.using('mysql').first()
+
 
 async def conectar_wsaa(request):
     ruta_base = os.path.dirname(__file__)  # Carpeta donde está views.py
@@ -58,12 +62,14 @@ async def conectar_wsaa(request):
     msg = ''
     err = 0
     try:
+        global Wsfe
         Wsfe = WSFEv1()
         Wsfe.SetTicketAcceso(
             WSAA().Autenticar("wsfe", Crt, Key))
         Wsfe.Cuit = 20218452789
+        config = await obtener_Config()
+        Wsfe.Conectar()
 
-        await Wsfe.Conectar()
     except Exception as e:
         print(str(e))
         if str(e) == 'key values mismatch':
@@ -72,4 +78,15 @@ async def conectar_wsaa(request):
         elif str(e).startswith('Unable to find the server'):
             err = 2
             msg = 'El servidor de ARCA no está disponible, revise que tenga internet tambien.'
+        elif str(e).startswith('ns1:cms.cert.untrusted: Certificado'):
+            err = 2
+            msg = 'Certificado no emitido por AC de confianza.'
     return JsonResponse({'mensaje': msg, 'err': err})
+
+async def obtener_nrofact(request):
+    global Wsfe
+    query = request.GET.get('q', '')  # Obtener el parámetro de búsqueda
+    config = await obtener_Config() 
+    comprobante = Wsfe.CompUltimoAutorizado(int(query), int(config.punto_venta))
+    return JsonResponse(
+        {'Nrofact': config.punto_venta.zfill(5) + '-' + str(int(comprobante) + 1).zfill(8)})

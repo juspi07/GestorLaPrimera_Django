@@ -43,8 +43,8 @@ HOMO = False  # solo homologación
 TYPELIB = False  # usar librería de tipos (TLB)
 LANZAR_EXCEPCIONES = False  # valor por defecto: True
 
-#WSDL = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
-WSDL = "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL"
+WSDL = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
+#WSDL = "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL"
 
 
 class WSFEv1(BaseWS):

@@ -24,17 +24,18 @@ document.addEventListener("DOMContentLoaded", function () {
 	fetch('/conectar-wsaa')
 		.then(res => res.json())
 		.then(data => {
-			console.log(data)
+			//console.log(data)
 			const estado = document.getElementById('estado-wsaa');
 			if (data.err == 0) {
 				estado.innerHTML = `<h3 style="color: green">¡Listo!</h3>`;
+
 				setTimeout(() => {
 					document.querySelector("#modalarca").style.display = "none";
 				}, 1200);
 			} else {
 				estado.innerHTML = `<h3 style="color: red;">${data.mensaje}</h3>`;
 			}
-	});
+		});
 
 
 
@@ -105,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	function seleccionarFilaCliente(boton) {
 		// Obtener la fila que contiene el botón
 		var cuit = boton.parentNode.parentNode.cells[0].innerText;
-
+		var letra = 1
 		// Llamada AJAX a Django para procesar los datos
 		fetch(`/seleccionar_cliente?q=${cuit}`)
 			.then(response => response.json())
@@ -117,6 +118,16 @@ document.addEventListener("DOMContentLoaded", function () {
 				document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
 				document.getElementById("BCliente").disabled = true;
 				document.getElementById("BProductos").disabled = false;
+				if (data.dato_cli[0].responsabilidad_id !== 'RESPONSABLE INSCRIPTO') {
+					letra = 6
+				}
+			})
+			.catch(error => console.error("Error en la solicitud:", error));
+		
+		fetch(`/obt-nrofact?q=${letra}`)
+			.then(res => res.json())
+			.then(data => {
+				document.getElementById("Nrofact").innerText = `${data.Nrofact}`;
 			})
 			.catch(error => console.error("Error en la solicitud:", error));
 
@@ -255,7 +266,6 @@ document.addEventListener("DOMContentLoaded", function () {
 					InputCant.classList.remove("invalido");
 					BCerrarCant.disabled = false;
 					BCerrarCant.classList.remove("sin-pointer");
-
 				}
 			});
 		});
@@ -320,38 +330,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		borrarContenido(boton)
 
 		CalcularFactura()
+		document.getElementById("btconfirmar").removeAttribute("disabled");
 	}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-	function abrirModalCant() {
-		ModalCantidad.style.display = "block";
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
+	//function abrirModalCant() {
+	//	ModalCantidad.style.display = "block";
+	//}
 
 
 
@@ -372,6 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		fila.remove();
 		if (cuerpo.rows.length == 1) {
 			TablaProductos.querySelector("tr").remove()
+			document.getElementById("btconfirmar").setAttribute("disabled", true);
 		}
 	}
 
@@ -400,19 +387,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 
-	/*
-	function redondearDecimales(numero, decimales) {
-		numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
-		if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
-			return Number(numero.toFixed(decimales));
-		} else {
-			return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, 
-			// se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
-		}
-	}
-	*/
-
-
+	
 	function CalcularFactura() {
 		var total21 = 0, total105 = 0, subtotal = 0;
 

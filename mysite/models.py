@@ -158,14 +158,18 @@ class Zonas(models.Model):
 class Configuracion(models.Model):
     punto_venta = models.CharField(
         max_length=5,
-        validators=[RegexValidator(r'^\d+$', message='Unicamente se aceptan numeros.')]
+        #validators=[RegexValidator(r'^\d+$', message='Unicamente se aceptan numeros.')]
     )
 
-    def save(self, *args, **kwargs):
-        if not self.pk and Configuracion.objects.exists():
-            raise ValidationError("Ya existe una configuración. No se puede crear otra.")
-        super().save(*args, **kwargs)
+    class Meta:
+        managed = False
+        db_table = 'configuracion'
+    
+    #def save(self, *args, **kwargs):
+    #    if not self.pk and Configuracion.objects.exists():
+    #        raise ValidationError("Ya existe una configuración. No se puede crear otra.")
+    #    super().save(*args, **kwargs)
 
-    def __str__(self):
-        return 'Configuracion de la aplicación'
+    #def __str__(self):
+    #    return 'Configuracion de la aplicación'
 
