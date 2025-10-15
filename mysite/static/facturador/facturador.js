@@ -18,6 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	const regex = /^(?:\d{1,8}|\d{1,8}\.\d{1,4})$/;
 
+
+
+	function mostrarAlerta(mensaje) {
+		const barra = document.getElementById('alerta-error');
+		barra.textContent = mensaje;
+		barra.style.display = 'block';
+
+		// Ocultar después de 5 segundos
+		setTimeout(() => {
+			barra.style.display = 'none';
+		}, 5000);
+	}
+
 	/* Funciones de ARCA */
 
 	document.querySelector('#modalarca').style.display = 'block';
@@ -53,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	/* Funciones del boton Clientes */
 
-	SearchBar_Client.onkeyup = function () {
+	SearchBar_Client.onkeyup = async function () {
 		var query = SearchBar_Client.value;  // Obtener valor ingresado
 		var tabla = document.getElementById("TablaModalClient").getElementsByTagName('tbody')[0];
 
@@ -64,32 +77,35 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 
 		// Realizar petición AJAX
-		fetch(`/buscar_clientes?q=${query}`)
-			.then(response => response.json())
-			.then(data => {
-				vaciarTabla(tabla)
+		try {
+			const response = await fetch(`/buscar_clientes?q=${query}`);
+			const data = await response.json();
 
-				// Insertar los nuevos resultados en la tabla
-				data.clientes.forEach(cliente => {
-					var nuevaFila = tabla.insertRow();
-					var celdaCUIT = nuevaFila.insertCell(0);
-					var celdaRazons = nuevaFila.insertCell(1);
-					var celdaAccion = nuevaFila.insertCell(2);
+			vaciarTabla(tabla)
 
-					var boton = document.createElement("span");
-					boton.textContent = "✅";
-					boton.className = "emoji-clickable";
-					boton.addEventListener("click", function () {
-						seleccionarFilaCliente(this);
-					});
+			// Insertar los nuevos resultados en la tabla
+			data.clientes.forEach(cliente => {
+				var nuevaFila = tabla.insertRow();
+				var celdaCUIT = nuevaFila.insertCell(0);
+				var celdaRazons = nuevaFila.insertCell(1);
+				var celdaAccion = nuevaFila.insertCell(2);
 
-					celdaCUIT.textContent = cliente.cuit;
-					celdaRazons.textContent = cliente.razons;
-					celdaAccion.appendChild(boton);
-					//celdaAccion.innerHTML = `<td><button class="seleccionar-btn" 
-					//	onclick="seleccionarFilaCliente(this)">Seleccionar</button></td>`;
+				var boton = document.createElement("span");
+				boton.textContent = "✅";
+				boton.className = "emoji-clickable";
+				boton.addEventListener("click", function () {
+					seleccionarFilaCliente(this);
 				});
+
+				celdaCUIT.textContent = cliente.cuit;
+				celdaRazons.textContent = cliente.razons;
+				celdaAccion.appendChild(boton);
+				//celdaAccion.innerHTML = `<td><button class="seleccionar-btn" 
+				//	onclick="seleccionarFilaCliente(this)">Seleccionar</button></td>`;
 			});
+		} catch (error) {
+			mostrarAlerta('⚠️ Error de conexión. Intenta nuevamente.')
+		}
 	};
 
 	BCliente.onclick = function () {
@@ -123,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 			})
 			.catch(error => console.error("Error en la solicitud:", error));
-		
+
 		fetch(`/obt-nrofact?q=${letra}`)
 			.then(res => res.json())
 			.then(data => {
@@ -137,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	/* Funciones del boton Productos */
 
-	SearchBar_Products.onkeyup = function () {
+	SearchBar_Products.onkeyup = async function () {
 		var query = SearchBar_Products.value;  // Obtener valor ingresado
 		var query2 = document.getElementById("list").innerText;
 		var tabla = document.getElementById("TablaModalProductos").getElementsByTagName('tbody')[0];
@@ -148,71 +164,66 @@ document.addEventListener("DOMContentLoaded", function () {
 			vaciarTabla(tabla)
 			return;
 		}
+
 		// Realizar petición AJAX
-		fetch(`/buscar_productos?q=${query}&w=${query2}`)
-			.then(response => response.json())
-			.then(data => {
-				vaciarTabla(tabla)
-				// Insertar los nuevos resultados en la tabla
-				data.productos.forEach(producto => {
-					var nuevaFila = tabla.insertRow();
-					const input = document.createElement("input");
-					var celdaNombre = nuevaFila.insertCell(0);
-					var celdaCant = nuevaFila.insertCell(1);
-					var celdaPrecio = nuevaFila.insertCell(2);
-					var celdaIva = nuevaFila.insertCell(3);
-					var celdaAccion = nuevaFila.insertCell(4);
+		try {
+			const response = await fetch(`/buscar_productos?q=${query}&w=${query2}`)
+			const data = await response.json();
 
-					var boton = document.createElement("span");
-					boton.textContent = "✅";
-					boton.className = "emoji-clickable";
-					boton.addEventListener("click", function () {
-						const cuerpo = TablaProductos.querySelector("tbody");
-						if (!input.classList.contains("invalido")) {
-							if (!cuerpo || cuerpo.rows.length == 0) {
-								agregarHeader(TablaProductos)
-							}
-							seleccionarFilaProducto(this, TablaProductos);
+			vaciarTabla(tabla)
+			// Insertar los nuevos resultados en la tabla
+			data.productos.forEach(producto => {
+				var nuevaFila = tabla.insertRow();
+				const input = document.createElement("input");
+				var celdaNombre = nuevaFila.insertCell(0);
+				var celdaCant = nuevaFila.insertCell(1);
+				var celdaPrecio = nuevaFila.insertCell(2);
+				var celdaIva = nuevaFila.insertCell(3);
+				var celdaAccion = nuevaFila.insertCell(4);
+
+				var boton = document.createElement("span");
+				boton.textContent = "✅";
+				boton.className = "emoji-clickable";
+				boton.addEventListener("click", function () {
+					const cuerpo = TablaProductos.querySelector("tbody");
+					if (!input.classList.contains("invalido")) {
+						if (!cuerpo || cuerpo.rows.length == 0) {
+							agregarHeader(TablaProductos)
 						}
-					});
-
-					celdaNombre.innerHTML = `<td>${producto.nombre}</td>`;
-
-					//const input = document.createElement("input");
-					input.type = "text";
-					input.value = '1'
-					input.contentEditable = true
-					input.className = "input-celda";
-
-
-					//input.className = "input-celda";
-					//input.placeholder = "Ej: 123.4567";
-
-					//celdaCant.textContent = "1"; // Establecer el texto inicial
-					//celdaCant.setAttribute("contenteditable", "true"); // Hacer editable
-					//celdaCant.setAttribute("onclick", "borrarContenido(this)")
-
-					input.addEventListener("input", function () {
-						const valor = input.value;
-						if (!regex.test(valor)) {
-							input.classList.add("invalido");
-							boton.textContent = "❌";
-							boton.disabled = true;
-							boton.classList.add("sin-pointer");
-						} else {
-							input.classList.remove("invalido");
-							boton.textContent = "✅";
-							boton.disabled = false;
-							boton.classList.remove("sin-pointer");
-
-						}
-					});
-					celdaCant.appendChild(input)
-					celdaPrecio.innerHTML = `<td>${producto.precio}</td>`;
-					celdaIva.innerHTML = `<td>${producto.iva}</td>`;
-					celdaAccion.appendChild(boton);
+						seleccionarFilaProducto(this, TablaProductos);
+					}
 				});
-			});
+
+				celdaNombre.innerHTML = `<td>${producto.nombre}</td>`;
+
+				input.type = "text";
+				input.value = '1'
+				input.contentEditable = true
+				input.className = "input-celda";
+
+				input.addEventListener("input", function () {
+					const valor = input.value;
+					if (!regex.test(valor)) {
+						input.classList.add("invalido");
+						boton.textContent = "❌";
+						boton.disabled = true;
+						boton.classList.add("sin-pointer");
+					} else {
+						input.classList.remove("invalido");
+						boton.textContent = "✅";
+						boton.disabled = false;
+						boton.classList.remove("sin-pointer");
+
+					}
+				});
+				celdaCant.appendChild(input)
+				celdaPrecio.innerHTML = `<td>${producto.precio}</td>`;
+				celdaIva.innerHTML = `<td>${producto.iva}</td>`;
+				celdaAccion.appendChild(boton);
+			})
+		} catch {
+			mostrarAlerta('⚠️ Error de conexión. Intenta nuevamente.')
+		}	
 	};
 
 	BProductos.onclick = function () {
@@ -333,13 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("btconfirmar").removeAttribute("disabled");
 	}
 
-
-
-	//function abrirModalCant() {
-	//	ModalCantidad.style.display = "block";
-	//}
-
-
+	
 
 
 
@@ -387,7 +392,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 
-	
+
 	function CalcularFactura() {
 		var total21 = 0, total105 = 0, subtotal = 0;
 

@@ -83,6 +83,22 @@
     cursor: default;
 }
 
+    #alerta-error {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f44336; /* rojo */
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-weight: bold;
+      z-index: 9999;
+      display: none; /* Oculta por defecto */
+    }
+
+
+
 .modal {
     display: none;
     position: fixed;
