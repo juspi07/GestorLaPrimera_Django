@@ -27,4 +27,5 @@ urlpatterns = [
     path('buscar_productos/', views.buscar_productos, name='buscar_productos'),
     path('conectar-wsaa/', views.conectar_wsaa, name='conectar_wsaa'),
     path('obt-nrofact/', views.obtener_nrofact, name='obtener_nrofact'),
+    path('generarFactura/', views.generarFactura, name='generarFactura'),
 ]

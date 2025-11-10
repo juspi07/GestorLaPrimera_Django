@@ -1,0 +1,25 @@
+annotated-types==0.7.0
+asgiref==3.9.1
+cffi==2.0.0
+charset-normalizer==3.4.4
+colorama==0.4.6
+cryptography==46.0.1
+Django==5.2.6
+django-qr-code==4.2.0
+future==1.0.0
+httplib2==0.31.0
+M2Crypto @ file:///C:/Anaconda/envs/Facturador_LaPrimera310/Facturador_LaPrimera/M2Crypto-0.38.0-cp310-cp310-win_amd64.whl#sha256=b46f3cd57de32b33d2c7f3f6f2900e41cc8e4062b97211dc97bf7d2906d5836c
+mysqlclient==2.2.7
+pillow==12.0.0
+pycparser==2.23
+pydantic==2.12.4
+pydantic_core==2.41.5
+pyparsing==3.2.5
+PySimpleSOAP==1.8.22
+qrcode==8.2
+reportlab==4.4.4
+segno==1.6.6
+sqlparse==0.5.3
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+tzdata==2025.2

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load qr_code %}
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'facturador/factura.css' %}">
+    <title>Factura</title>
+</head>
+
+<body>
+    <div class="wrapper text-center bold text-20" style="width:100%;border-bottom: 0;">
+        ORIGINAL
+    </div>
+
+    <div class="flex relative">
+        <div class="wrapper inline-block w50 flex" style="border-right: 0">
+            <h3 class="text-center" style="font-size:24px;margin-bottom: 3px;width: 100%;">LA PRIMERA SA</h3>
+            <p style="font-size: 13px;line-height: 1.5;margin-bottom: 0;align-self: flex-end;">
+                <b>Razón Social:</b> LA PRIMERA SA
+                <br><b>Domicilio Comercial:</b> Pellegrini 701 - Chaco
+                <br><b>Condición frente al IVA: Responsable Inscripto</b>
+            </p>
+        </div>
+        <div class="wrapper inline-block w50">
+            <h3 class="text-center" style="font-size:24px;margin-bottom: 3px;">FACTURA</h3>
+            <p style="font-size: 13px;line-height: 1.5;margin-bottom: 0;">
+                <b>Comprobante Nro.: {{datos.N_fact}}</b>
+                <br><b>Fecha de Emisión: {{datos.Fecha}}</b>
+                <br><b>CUIT:</b> 30-67020652-8
+                <br><b>Ingresos Brutos:</b> 30-67020652-8
+                <br><b>Fecha de Inicio de Actividades:</b> 22/12/1994
+            </p>
+        </div>
+        <div class="wrapper floating-mid">
+            <h3 class="no-margin text-center" style="font-size: 36px;">{{datos.Comp}}</h3>
+            <h5 class="no-margin text-center">COD. {{datos.Cod}}</h5>
+        </div>
+    </div>
+
+    <!--
+    <div class="wrapper flex space-around" style="margin-top: 1px;">
+        <span><b>Período Facturado Desde:</b> 01/01/1930</span>
+        <span><b>Hasta:</b> 01/01/1930</span>
+        <span><b>Fecha de Vto. para el pago:</b> 01/01/1930</span>
+    </div>
+    -->
+    
+    <div class="wrapper" style="margin-top: 2px;font-size: 12px;">
+        <div class="flex" style="margin-bottom: 15px;">
+            <span style="width:30%"><b>CUIT:</b> {{datos.Cuit}}</span>
+            <span><b>Apellido y Nombre / Razón Social:</b> {{datos.Razons}}</span>
+        </div>
+        <div class="flex" style="flex-wrap: nowrap;margin-bottom: 5px;">
+            <span style="width:70%"><b>Condición frente al IVA:</b> IVA {{datos.Resp}}</span>
+            <span><b>Domicilio:</b> {{datos.Dir}}</span>
+        </div>
+        <!-- <div class="flex">
+            <span><b>Condición de venta:</b> Otra</span>
+        </div> -->
+    </div>
+
+    <table style="margin-top: 5px;">
+        <thead>
+            <th class="text-left">Código</th>
+            <th class="text-left">Producto / Servicio</th>
+            <th>Cantidad</th>
+            <th>U. Medida</th>
+            <th>Precio Unit.</th>
+            <th>% Bonif</th>
+            <th>Subtotal</th>
+            <th>Alicuota IVA</th>
+            <th>Subtotal c/IVA</th>
+        </thead>
+        <tbody>
+            {% for producto in datos.productos %}
+                <tr>
+                    <td class="text-center">472171</td>
+                    <td class="text-center">{{producto.descripcion}}</td>
+                    <td class="text-center">{{producto.cantidad}}</td>
+                    <td class="text-center">Unidades</td>
+                    <td class="text-center">{{producto.precio}}</td>
+                    <td class="text-center">0,00</td>
+                    <td class="text-center">{{producto.subtotal}}</td>
+                    <td class="text-center">{{producto.iva}}</td>
+                    <td class="text-center">{{producto.totaliva}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer" style="margin-top: 300px;">
+        <div class="flex wrapper space-between">
+            <div style="width:55%">
+                <p class="bold">Otros tributos</p>
+                <table>
+                    <thead>
+                        <th>Descripción</th>
+                        <th>Detalle</th>
+                        <th class="text-right">Alíc. %</th>
+                        <th class="text-right">Importe</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Per./Ret. de Impuesto a las Ganancias</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Per./Ret. de IVA</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Impuestos Internos</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Impuestos Municipales</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="width:40%;margin-top: 40px;" class="flex wrapper">
+                <span class="text-right" style="width:60%"><b>Importe Neto Gravado: $</b></span><span class="text-right"
+                    style="width:40%"><b>{{datos.subtotal}}</b></span>
+                <span class="text-right" style="width:60%"><b>IVA 27%: $</b></span><span class="text-right"
+                    style="width:40%"><b>0.00</b></span>
+                <span class="text-right" style="width:60%"><b>IVA 21%: $</b></span><span class="text-right"
+                    style="width:40%"><b>{{datos.iva21}}</b></span>
+                <span class="text-right" style="width:60%"><b>IVA 10.5%: $</b></span><span class="text-right"
+                    style="width:40%"><b>{{datos.iva105}}</b></span>
+                <span class="text-right" style="width:60%"><b>IVA 5%: $</b></span><span class="text-right"
+                    style="width:40%"><b>0.00</b></span>
+                <span class="text-right" style="width:60%"><b>IVA 2.5%: $</b></span><span class="text-right"
+                    style="width:40%"><b>0.00</b></span>
+                <span class="text-right" style="width:60%"><b>IVA 0%: $</b></span><span class="text-right"
+                    style="width:40%"><b>0.00</b></span>
+                <span class="text-right" style="width:60%"><b>Importe Otros Tributos:
+                        $</b></span><span class="text-right" style="width:40%"><b>0.00</b></span>
+                <span class="text-right" style="width:60%"><b>Importe Total:
+                        $</b></span><span class="text-right" style="width:40%"><b>{{datos.total}}</b></span>
+            </div>
+        </div>
+        <div class="flex relative" style="margin-top: 20px;">
+            <div class="qr-container" style="width: 20%;">
+                {% qr_from_text datos.qr size=2 image_format="png" error_correction="H" alt_text="" class_names="qrcode" %}
+            </div>
+            <div style="padding-left: 10px;width: 45%;">
+                <img src="{% static 'logoarca.jpg' %}" style="max-width:130px">
+                <h4 class="italic bold">Comprobante Autorizado</h4>
+                <p class="small italic bold" style="font-size: 9px;">Esta Administración Federal no se responsabiliza
+                    por los datos ingresados en el detalle de la operación</p>
+            </div>
+            <div class="flex" style="align-self: flex-start;width: 35%;">
+                <span class="text-right" style="width:50%"><b>CAE N°:</b></span><span class="text-left"
+                    style="padding-left: 10px;">{{datos.cae}}</span>
+                <span class="text-right" style="width:50%"><b>Fecha de Vto. de CAE:</b></span><span class="text-left"
+                    style="padding-left: 10px;">{{datos.vto}}</span>
+            </div>
+            <span class="floating-mid bold">Pág 1/1</span>
+        </div>
+    </div>
+</body>
+
+</html>

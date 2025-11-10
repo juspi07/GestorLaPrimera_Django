@@ -39,7 +39,7 @@ import os
 import sys
 from .utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 
-HOMO = False  # solo homologación
+HOMO = True  # solo homologación
 TYPELIB = False  # usar librería de tipos (TLB)
 LANZAR_EXCEPCIONES = False  # valor por defecto: True
 

@@ -11,8 +11,6 @@
 <head>
 	<link rel="stylesheet" href="{% static 'facturador/facturador.css' %}">
 	<link rel="license" href="https://www.opensource.org/licenses/mit-license/">
-
-
 </head>
 {% endblock %}
 
@@ -20,50 +18,64 @@
 
 <div id="alerta-error"></div>
 
+<form method="POST" action="{% url 'generarFactura' %}">
+	{% csrf_token %}
+
+<!-- Variables ocultas -->
+<input type="hidden" name="neto21" id="neto21">
+<input type="hidden" name="neto105" id="neto105">
+<input type="hidden" name="inputJson" id="inputJson">
+
 <div class="ficha-contenedor">
 	<!-- Ficha izquierda -->
 	<table class="ficha">
 		<tr>
 			<td class="etiqueta">Razon Social :</td>
-			<td class="valor" id="razons"></td>
+			<td class="valor"> <input class="input-como-td" id="razons" name="razons" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="razons"></td>-->
 		</tr>
 		<tr>
 			<td class="etiqueta">CUIT :</td>
-			<td class="valor" id="cuit"></td>
+			<td class="valor"> <input class="input-como-td" id="cuit" name="cuit" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="cuit"></td>-->
 		</tr>
 		<tr>
 			<td class="etiqueta">Direccion :</td>
-			<td class="valor" id="dir"></td>
+			<td class="valor"> <input class="input-como-td" id="dir" name="dir" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="dir"></td>-->
 		</tr>
 		<tr>
 			<td class="etiqueta">Resposabilidad :</td>
-			<td class="valor" id="resp"></td>
+			<td class="valor"> <input class="input-como-td" id="resp" name="resp" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="resp"></td>-->
 		</tr>
 		<tr>
 			<td class="etiqueta">Lista :</td>
-			<td class="valor" id="list"></td>
+			<td class="valor"> <input class="input-como-td" id="list" name="list" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="list"></td>-->
 		</tr>
 	</table>
 
 	<div class="boton-centro">
-		<button id="BCliente">Buscar Cliente</button>
+		<button type="button" id="BCliente">Buscar Cliente</button>
 	</div>
-
 
 	<div>
 		<!-- Ficha derecha -->
 		<table class="ficha">
 			<tr>
 				<td class="etiqueta">Factura # :</td>
-				<td class="valor" id="Nrofact">------</td>
+				<!-- <td id="Nrofact" class="valor"> ------ </td> -->
+				<td> <input class="input-como-td" name="Nrofact" id="Nrofact" readonly tabindex="-1"></input></td>
 			</tr>
 			<tr>
 				<td class="etiqueta">Fecha :</td>
-				<td class="valor" id="date">{{fecha}}</td>
+				<td class="valor"> <input class="input-como-td" value={{fecha}} name="date" id="date" readonly tabindex="-1"></input></td>
+				<!--<td class="valor" id="date">{{fecha}}</td>-->
 			</tr>
 		</table>
 		<div class="boton-wrapper">
-			<button id="btconfirmar" class="boton-confirmar" disabled>Imprimir</button>
+			<button id="btconfirmar" type="submit" class="boton-confirmar" disabled>Imprimir</button>
 		</div>
 	</div>
 </div>
@@ -76,7 +88,7 @@
 	</table>
 
 	<div class="boton-inferior">
-		<button id="BProductos" disabled>Buscar Productos</button>
+		<button type="button" id="BProductos" disabled>Buscar Productos</button>
 	</div>
 </div>
 
@@ -89,20 +101,21 @@
 		</tr>
 		<tr>
 			<td class="etiqueta">Iva 21% :</td>
-			<td class="valor" id="iva21">------</td>
+			<td class="valor"> <input class="input-como-td" value='------' name="iva21" id="iva21" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="iva21">------</td>-->
 		</tr>
 		<tr>
 			<td class="etiqueta">Iva 10.5% :</td>
-			<td class="valor" id="iva105">------</td>
+			<td class="valor"> <input class="input-como-td" value='------' name="iva105" id="iva105" readonly tabindex="-1"></input></td>
+			<!--<td class="valor" id="iva105">------</td>-->
 		</tr>
 		<tr>
 			<td class="etiqueta">Total ($) :</td>
-			<td class="valor negrita" id="total">------</td>
+			<td class="valor"> <input class="input-como-td" value='------' name="total" id="total" readonly tabindex="-1"></input></td>
+			<!--<td class="valor negrita" id="total">------</td>-->
 		</tr>
 	</table>
 </div>
-
-
 
 <!-- Modal Cliente oculto -->
 <div id="ModalCliente" class="modal">
@@ -152,7 +165,7 @@
 				</tbody>
 			</table>
 		</div>
-		<button class="FinalizarB" id="BCerrarProd">Finalizar</button>
+		<button class="FinalizarB" type="button" id="BCerrarProd">Finalizar</button>
 	</div>
 </div>
 
@@ -164,7 +177,7 @@
 			<input class="input-celda" type="text" id="InputCant""
 				autocomplete=" off">
 		</div>
-		<button class="FinalizarB" id="BCerrarCant">Finalizar</button>
+		<button class="FinalizarB" type="button" id="BCerrarCant">Finalizar</button>
 	</div>
 </div>
 
@@ -180,7 +193,7 @@
 			<label><input type="radio" name="opcion" value="2"> No adaptar</label>
 		</div>
 
-		<button class="FinalizarB" id="BCerrarPrec">Finalizar</button>
+		<button class="FinalizarB" type="button" id="BCerrarPrec">Finalizar</button>
 	</div>
 </div>
 
@@ -195,8 +208,18 @@
 	</div>
 </div>
 
+</form>
 
 <script src="{% static 'facturador/facturador.js' %}"></script>
+<!--
+<script>
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+      location.reload();
+    }
+  });
+</script>
+-->
 {% endblock %}
 
 {% block foot %}

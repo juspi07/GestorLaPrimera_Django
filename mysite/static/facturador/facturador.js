@@ -127,11 +127,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		fetch(`/seleccionar_cliente?q=${cuit}`)
 			.then(response => response.json())
 			.then(data => {
-				document.getElementById("razons").innerText = `${data.dato_cli[0].razons}`;
-				document.getElementById("cuit").innerText = `${data.dato_cli[0].cuit}`;
-				document.getElementById("dir").innerText = `${data.dato_cli[0].direccion}`;
-				document.getElementById("resp").innerText = `${data.dato_cli[0].responsabilidad_id}`;
-				document.getElementById("list").innerText = `${data.dato_cli[0].lista}`;
+				document.getElementById("razons").value = `${data.dato_cli[0].razons}`;
+				document.getElementById("cuit").value = `${data.dato_cli[0].cuit}`;
+				document.getElementById("dir").value = `${data.dato_cli[0].direccion}`;
+				document.getElementById("resp").value = `${data.dato_cli[0].responsabilidad__descripcion}`;
+				document.getElementById("list").value = `${data.dato_cli[0].lista__nombre}`;
 				document.getElementById("BCliente").disabled = true;
 				document.getElementById("BProductos").disabled = false;
 				if (data.dato_cli[0].responsabilidad_id !== 'RESPONSABLE INSCRIPTO') {
@@ -143,11 +143,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		fetch(`/obt-nrofact?q=${letra}`)
 			.then(res => res.json())
 			.then(data => {
-				document.getElementById("Nrofact").innerText = `${data.Nrofact}`;
+				document.getElementById("Nrofact").value = `${data.Nrofact}`;
+				//document.getElementById("Nrofact").innerText = `${data.Nrofact}`;
+				document.getElementById("ModalCliente").style.display = "none";
 			})
 			.catch(error => console.error("Error en la solicitud:", error));
 
-		document.getElementById("ModalCliente").style.display = "none";
+		
 	}
 
 
@@ -155,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	SearchBar_Products.onkeyup = async function () {
 		var query = SearchBar_Products.value;  // Obtener valor ingresado
-		var query2 = document.getElementById("list").innerText;
+		var query2 = document.getElementById("list").value;
 		var tabla = document.getElementById("TablaModalProductos").getElementsByTagName('tbody')[0];
 
 
@@ -213,7 +215,6 @@ document.addEventListener("DOMContentLoaded", function () {
 						boton.textContent = "✅";
 						boton.disabled = false;
 						boton.classList.remove("sin-pointer");
-
 					}
 				});
 				celdaCant.appendChild(input)
@@ -242,11 +243,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		const fila = boton.closest("tr");
 		const nombre = fila.cells[0].innerText;
 		const cantidad = fila.cells[1].firstChild.value
-		const precio = fila.cells[2].innerText / 1.21
+		let precio = 0
 		const iva = fila.cells[3].innerText;
-
+		if (iva == '21.0') {
+			precio = fila.cells[2].innerText / 1.21
+		} else {
+			precio = fila.cells[2].innerText / 1.105
+		}
 		const nuevaFila = tabla.insertRow();
-		var aux = parseFloat(cantidad) * parseFloat(precio)
+		let aux = parseFloat(cantidad) * parseFloat(precio)
 
 
 		// Celda: Descripción
@@ -341,10 +346,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		borrarContenido(boton)
 
 		CalcularFactura()
-		document.getElementById("btconfirmar").removeAttribute("disabled");
+		if (document.getElementById("Nrofact").value != '') {
+			document.getElementById("btconfirmar").removeAttribute("disabled");
+			generarJson()
+		}		
 	}
 
-	
 
 
 
@@ -361,6 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		const fila = boton.closest("tr");
 		const cuerpo = TablaProductos.querySelector("tbody");
 		fila.remove();
+		SearchBar_Products.value = ''
 		if (cuerpo.rows.length == 1) {
 			TablaProductos.querySelector("tr").remove()
 			document.getElementById("btconfirmar").setAttribute("disabled", true);
@@ -394,7 +402,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 	function CalcularFactura() {
-		var total21 = 0, total105 = 0, subtotal = 0;
+		var total21 = 0, total105 = 0, subtotal = 0
+		var neto21 = 0, neto105 = 0
 
 		for (let i = 1; i < TablaProductos.rows.length; i++) {
 			let fila = TablaProductos.rows[i]
@@ -402,8 +411,10 @@ document.addEventListener("DOMContentLoaded", function () {
 			let iva = fila.cells[3].querySelector("span").innerText
 			subtotal += parseFloat(celda)
 			if (iva == '21.0') {
+				neto21 += parseFloat(celda)
 				total21 += parseFloat(celda) * 0.21
 			} else {
+				neto105 += parseFloat(celda)
 				total105 += parseFloat(celda) * 0.105
 			}
 		}
@@ -411,9 +422,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById('subtotal').innerHTML = `$ ${redondearDecimales(subtotal, 2)}`
 
 		var total = subtotal + total21 + total105
-		document.getElementById('iva21').innerHTML = `$ ${redondearDecimales(total21, 2)}`
-		document.getElementById('iva105').innerHTML = `$ ${redondearDecimales(total105, 2)}`
-		document.getElementById('total').innerHTML = `$ ${redondearDecimales(total, 2)}`
+		document.getElementById('iva21').value = `$ ${redondearDecimales(total21, 2)}`
+		document.getElementById('iva105').value = `$ ${redondearDecimales(total105, 2)}`
+		document.getElementById('neto21').value = `$ ${redondearDecimales(neto21, 2)}`
+		document.getElementById('neto105').value = `$ ${redondearDecimales(neto105, 2)}`
+		document.getElementById('total').value = `$ ${redondearDecimales(total, 2)}`
 	}
 
 
@@ -438,6 +451,27 @@ document.addEventListener("DOMContentLoaded", function () {
 		return boton
 	}
 
+	function generarJson() {
+		let datos = []
+		for (let i = 1; i < TablaProductos.rows.length; i++) {
+			let fila = TablaProductos.rows[i]
+			let iva = parseFloat(fila.cells[3].querySelector("span").innerText)
+			let subtotal = fila.cells[4].querySelector("span").innerText
+			let totaliva = redondearDecimales((1 + (parseFloat(iva) / 100)) * parseFloat(subtotal), 2)
+			let filaObj = {
+				descripcion: fila.cells[0].querySelector("span").innerText,
+				cantidad: fila.cells[1].querySelector("span").innerText,
+				precio: fila.cells[2].querySelector("span").innerText,
+				iva: iva,
+				subtotal: subtotal,
+				totaliva: totaliva
+			};
+			datos.push(filaObj);
+		}
+		inputJson = document.getElementById('inputJson')
+		inputJson.value = JSON.stringify(datos)
+	}
+	
 
 	//window.onclick = function (event) {
 	//	if (event.target === modal) {

@@ -1,3 +1,15 @@
+.input-como-td {
+    border: none;
+  background: transparent;
+  pointer-events: none; /* evita selección y clics */
+  user-select: none;    /* evita selección de texto */
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+
+}
+
+
 .ficha-contenedor {
     display: flex;
     justify-content: space-between;

@@ -8,15 +8,42 @@ Important: The Ui is in spanish.
 
 
 ### Features:
-- Can already connect to AFIP to request the latest issued invoice \
+- Can already connect to ARCA to request the latest issued invoice \
 (for security reasons, the .crt and .key files that go in the "cert" folder have been removed)
 - Clients and products can be searched directly from the web interface (via AJAX calls)
 - When products are selected, the system also calculates TAX and the total amount
 - Can change price and quantity (with correspondingly validators) for every selected product
+- Electronic invoices can be issued directly from the application, with CAE and CAE Vto.
 
 
 
-The database address should also be updated in the <ins>settings</ins> file.
+### Instructions:
+Follow these steps to set up and run the Django project locally:
+- Clone the repository
+```
+git clone https://github.com/juspi07/GestorLaPrimera_Django.git
+cd GestorLaPrimera_Django
+```
+- Install dependencies
+```
+pip install -r requirements.txt
+```
+- Apply migrations
+```
+python manage.py migrate
+```
+- Create a superuser
+```
+python manage.py createsuperuser
+```
+- Run the development server
+```
+python manage.py runserver
+```
+Then visit https://localhost:8000/admin in your browser.
+
+- Create a records in Clientes, Listas, RespIva, Zonas y Productos
+
 
 
 ### Images (Reminder: everything is still in progress):
@@ -30,6 +57,8 @@ The database address should also be updated in the <ins>settings</ins> file.
 ![](https://i.imgur.com/dFI08xA.png)
 
 ![](https://i.imgur.com/2F6BacL.png)
+
+![](https://i.imgur.com/Khl51oY.png)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
