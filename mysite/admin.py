@@ -4,14 +4,10 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Comprobantes)
-#admin.site.register(Ventas)
 admin.site.register(VentaProductos)
-#admin.site.register(Clientes)
 admin.site.register(RespIva)
 admin.site.register(Zonas)
 admin.site.register(Listas)
-#admin.site.register(Productos)
-#admin.site.register(Configuracion)
 
 
 

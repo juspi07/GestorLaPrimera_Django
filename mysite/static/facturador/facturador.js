@@ -70,12 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		var query = SearchBar_Client.value;  // Obtener valor ingresado
 		var tabla = document.getElementById("TablaModalClient").getElementsByTagName('tbody')[0];
 
-		// Evitar consultas vacías
-		if (query.length < 1) {
-			vaciarTabla(tabla)
-			return;
-		}
-
 		// Realizar petición AJAX
 		try {
 			const response = await fetch(`/buscar_clientes?q=${query}`);
@@ -160,12 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		var query2 = document.getElementById("list").value;
 		var tabla = document.getElementById("TablaModalProductos").getElementsByTagName('tbody')[0];
 
-
-		// Evitar consultas vacías
-		if (query.length < 1) {
-			vaciarTabla(tabla)
-			return;
-		}
 
 		// Realizar petición AJAX
 		try {

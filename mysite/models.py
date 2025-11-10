@@ -27,25 +27,42 @@ class Clientes(models.Model):
 
     def __str__(self):
         return self.razons
+    
+    class Meta:
+        verbose_name = "Cliente"
+        verbose_name_plural = "Clientes"
+
 
 class RespIva(models.Model):
     descripcion = models.CharField(unique=True, max_length=45)  
 
     def __str__(self):
         return self.descripcion
+    
+    class Meta:
+        verbose_name = "RespIva"
+        verbose_name_plural = "RespIva"
 
 class Zonas(models.Model):
-    nombre = models.CharField(db_column='Nombre', unique=True, max_length=45)  
+    nombre = models.CharField(max_length=45)  
     dgr = models.DecimalField(max_digits=2, decimal_places=2)
 
     def __str__(self):
         return self.nombre
+    
+    class Meta:
+        verbose_name = "Zona"
+        verbose_name_plural = "Zonas"
 
 class Listas(models.Model):
     nombre = models.CharField(max_length=30, unique=True)
     
     def __str__(self):
         return self.nombre
+    
+    class Meta:
+        verbose_name = "Lista"
+        verbose_name_plural = "Listas"
 
 class Productos(models.Model):
     IVA_CHOICES = {
@@ -59,7 +76,9 @@ class Productos(models.Model):
     fecha = models.DateField()
     iva = models.CharField(max_length=4, choices=IVA_CHOICES, default='21.0')
 
-
+    class Meta:
+        verbose_name = "Producto"
+        verbose_name_plural = "Productos"
 
 class Comprobantes(models.Model):
     descripcion = models.CharField(unique=True, max_length=45)
@@ -67,6 +86,10 @@ class Comprobantes(models.Model):
 
     def __str__(self):
         return self.descripcion
+
+    class Meta:
+        verbose_name = "Comprobante"
+        verbose_name_plural = "Comprobantes"
 
 class Ventas(models.Model):
     fecha = models.DateField()
@@ -83,6 +106,8 @@ class Ventas(models.Model):
 
     class Meta:
         unique_together = (('cliente', 'comprobante', 'n_fact'),)
+        verbose_name = "Venta"
+        verbose_name_plural = "Ventas"
 
     def __str__(self):
         return self.n_fact
@@ -98,6 +123,10 @@ class VentaProductos(models.Model):
 
     def __str__(self):
         return self.n_fact
+    
+    class Meta:
+        verbose_name = "VentaProductos"
+        verbose_name_plural = "VentaProductos"
 
 
 class Configuracion(models.Model):
@@ -105,3 +134,7 @@ class Configuracion(models.Model):
 
     def __str__(self):
         return self.punto_venta
+    
+    class Meta:
+        verbose_name = "Configuracion"
+        verbose_name_plural = "Configuracion"

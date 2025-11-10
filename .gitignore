@@ -9,3 +9,4 @@ migrations
 mysite/static/cert/**
 mysite/migrations
 db.sqlite3
+Gestor_LaPrimeraDjango/settings.py

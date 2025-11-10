@@ -32,18 +32,13 @@ pip install -r requirements.txt
 ```
 python manage.py migrate
 ```
-- Create a superuser
-```
-python manage.py createsuperuser
-```
+When apply migrations, you have a initial data in database
+
 - Run the development server
 ```
 python manage.py runserver
 ```
-Then visit https://localhost:8000/admin in your browser.
-
-- Create a records in Clientes, Listas, RespIva, Zonas y Productos
-
+Then visit https://localhost:8000 in your browser.
 
 
 ### Images (Reminder: everything is still in progress):
