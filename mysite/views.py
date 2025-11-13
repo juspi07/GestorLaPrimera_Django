@@ -15,8 +15,6 @@ import qrcode
 from io import BytesIO
 import base64
 
-
-
 def home(request):
     return render(request, 'home.html')
 
@@ -99,22 +97,30 @@ async def obtener_nrofact(request):
         {'Nrofact': config.punto_venta.zfill(5) + '-' + str(int(comprobante) + 1).zfill(8)})
 
 
-#@csrf_exempt
+
 def generarFactura(request):
-    if request.method != 'POST': #or request.headers.get('X-Internal-Request') != 'true':
+    if request.method != 'POST':
         return HttpResponseForbidden("Acceso no permitido por GET")
     
-    
-
     global letra
-    if letra == 1:
-        Comp = 'A'
-        comp = 'FACTURA A'
-        Cod='001'
-    else:
-        Comp = 'B'
-        comp = 'FACTURA B'
-        Cod='006'
+    match letra:
+        case 1:
+            Comp = 'A'
+            comp = 'FACTURA A'
+            Cod = '001'
+        case 6:
+            Comp = 'B'
+            comp = 'FACTURA B'
+            Cod = '006'
+        case 3:
+            Comp = 'A'
+            comp = 'NOTA DE CREDITO A'
+            Cod = '003'
+        case 8:
+            Comp = 'B'
+            comp = 'NOTA DE CREDITO B'
+            Cod = '008'
+    
     Fecha=request.POST.get('date')
     N_fact=request.POST.get('Nrofact')
     Razons=request.POST.get('razons')
@@ -126,8 +132,10 @@ def generarFactura(request):
     Iva105=request.POST.get('iva105')
     Iva21=request.POST.get('iva21')
     Total=request.POST.get('total')
-    Prod = json.loads(request.POST.get('inputJson'));
-   
+    Prod = json.loads(request.POST.get('inputJson'))
+    NrofactObj=request.POST.get('NrofactObj')
+    radio=request.POST.get('toggle')
+     
     Ventas.objects.create(
         fecha= datetime.strptime(Fecha, "%d/%m/%Y").strftime("%Y-%m-%d"),
         comprobante= Comprobantes.objects.get(descripcion=comp),
@@ -152,8 +160,9 @@ def generarFactura(request):
     imp_iva = str(round((float(Iva105.split(' ')[1]) + float(Iva21.split(' ')[1])),2))
     fecha_cbte = datetime.now().strftime("%Y%m%d")
     
+
     Wsfe.CrearFactura(
-        concepto=1, nro_doc=nro_doc, tipo_cbte=1,
+        concepto=1, nro_doc=nro_doc, tipo_cbte=letra,
         cbt_desde=cbte_nro , cbt_hasta=cbte_nro, fecha_cbte=fecha_cbte,
         punto_vta=punto_vta, imp_total=imp_total,
         imp_neto=imp_neto, imp_iva=imp_iva,
@@ -165,6 +174,11 @@ def generarFactura(request):
 
     if Pan105.split(' ')[1] != '0.00':
         Wsfe.AgregarIva(4, round(float(Pan105.split(' ')[1]),2), round(float(Iva105.split(' ')[1]),2))
+    
+    
+    if radio == 'credito':
+        Wsfe.AgregarPeriodoComprobantesAsociados(fecha_cbte, fecha_cbte)
+
     
     Wsfe.CAESolicitar()
 
@@ -178,10 +192,10 @@ def generarFactura(request):
     afip = 'https://www.arca.gob.ar/fe/qr/?p='
     
     aux = { "ver":1,"fecha":datetime.now().strftime("%Y-%m-%d"),
-    "cuit":30670206528,"ptoVta":punto_vta,"tipoCmp":letra,
-    "nroCmp":cbte_nro,"importe":float(imp_total),"moneda":"PES",
-    "ctz":"1.000","tipoDocRec":80,"nroDocRec":int(nro_doc),
-    "tipoCodAut":"E","codAut":int(Wsfe.CAE) }
+        "cuit":30670206528,"ptoVta":punto_vta,"tipoCmp":letra,
+        "nroCmp":cbte_nro,"importe":float(imp_total),"moneda":"PES",
+        "ctz":"1.000","tipoDocRec":80,"nroDocRec":int(nro_doc),
+        "tipoCodAut":"E","codAut":int(Wsfe.CAE) }
         
     code = b64encode(json.dumps(aux).encode('utf-8'))
     code = code.decode('utf-8')
@@ -203,11 +217,9 @@ def generarFactura(request):
         'total': imp_total,
         'cae': Wsfe.CAE,
         'vto': vto,
-        'qr': qr
+        'qr': qr,
     }
-
-    print(datos_factura)
-    
+   
     
     html = render_to_string('factura.html', {'datos': datos_factura})
     return HttpResponse(html)

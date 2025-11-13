@@ -14,6 +14,7 @@ Important: The Ui is in spanish.
 - When products are selected, the system also calculates TAX and the total amount
 - Can change price and quantity (with correspondingly validators) for every selected product
 - Electronic invoices can be issued directly from the application, with CAE and CAE Vto.
+- Admin interface is completely functional.
 
 
 
@@ -21,7 +22,7 @@ Important: The Ui is in spanish.
 Follow these steps to set up and run the Django project locally:
 - Clone the repository
 ```
-git clone https://github.com/juspi07/GestorLaPrimera_Django.git
+git clone https://github.com/jpmagaldi/GestorLaPrimera_Django.git
 cd GestorLaPrimera_Django
 ```
 - Install dependencies
@@ -32,7 +33,7 @@ pip install -r requirements.txt
 ```
 python manage.py migrate
 ```
-When apply migrations, you have a initial data in database
+When apply migrations, you have a initial data in database, and admin account (user:admin, pw:1234)
 
 - Run the development server
 ```

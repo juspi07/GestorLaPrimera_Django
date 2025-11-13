@@ -1,14 +1,18 @@
 .input-como-td {
-    border: none;
+  border: none;
   background: transparent;
   pointer-events: none; /* evita selección y clics */
   user-select: none;    /* evita selección de texto */
   font-family: inherit;
   font-size: inherit;
   width: 100%;
-
 }
 
+.readonly-switcher {
+  pointer-events: none;
+  opacity: 0.6; /* opcional: para mostrar que está desactivado */
+  cursor: not-allowed;
+}
 
 .ficha-contenedor {
     display: flex;
@@ -95,21 +99,19 @@
     cursor: default;
 }
 
-    #alerta-error {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #f44336; /* rojo */
-      color: white;
-      text-align: center;
-      padding: 12px;
-      font-weight: bold;
-      z-index: 9999;
-      display: none; /* Oculta por defecto */
-    }
-
-
+#alerta-error {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f44336; /* rojo */
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+    z-index: 9999;
+    display: none; /* Oculta por defecto */
+}
 
 .modal {
     display: none;
@@ -316,4 +318,53 @@
 .grupo-radio label {
   font-size: 14px;
   cursor: pointer;
+}
+
+
+.toggle-container {
+  position: relative;
+  display: inline-flex;
+  width: 200px;
+  height: 40px;
+  background: #e0e0e0;
+  border-radius: 20px;
+  overflow: hidden;
+  font-family: sans-serif;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+.toggle-label {
+  flex: 1;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  z-index: 2;
+  font-weight: 500;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.toggle-container input[type="radio"] {
+  display: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 96px;
+  height: 36px;
+  background: #2c3e50;
+  border-radius: 18px;
+  transition: left 0.3s ease;
+  z-index: 1;
+}
+
+#option2:checked ~ .toggle-slider {
+  left: 102px;
+}
+
+#option1:checked ~ label[for="option1"],
+#option2:checked ~ label[for="option2"] {
+  color: white;
 }

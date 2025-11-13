@@ -13,11 +13,12 @@
   <nav class="navbar">
     <div class="logo">🍞 La Primera SA</div>
     <ul class="nav-links">
-      <li><a href="{% url 'home' %}">Inicio</a></li>
-      <li><a href="{% url 'facturador' %}">Facturacion</a></li>
+      <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Inicio</a></li>
+      <li><a href="{% url 'facturador' %}" class="{% if request.resolver_match.url_name == 'facturador' %}active{% endif %}">Facturacion</a></li>
       <li><a href="{% url 'admin:index' %}">Administracion</a></li>
     </ul>
   </nav>
 </header>
+
 
           

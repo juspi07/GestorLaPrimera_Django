@@ -15,9 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	const InputPrecio = document.getElementById("InputPrecio");
 	const BCerrarCant = document.getElementById("BCerrarCant");
 	const BCerrarPrec = document.getElementById("BCerrarPrec");
+	const Facturacheck = document.getElementById("option1label");
+	const Facturacheck1 = document.getElementById("option2label");
+	const radio = document.getElementsByName("toggle")
 
 	const regex = /^(?:\d{1,8}|\d{1,8}\.\d{1,4})$/;
-
 
 
 	function mostrarAlerta(mensaje) {
@@ -37,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	fetch('/conectar-wsaa')
 		.then(res => res.json())
 		.then(data => {
-			//console.log(data)
 			const estado = document.getElementById('estado-wsaa');
 			if (data.err == 0) {
 				estado.innerHTML = `<h3 style="color: green">¡Listo!</h3>`;
@@ -94,8 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				celdaCUIT.textContent = cliente.cuit;
 				celdaRazons.textContent = cliente.razons;
 				celdaAccion.appendChild(boton);
-				//celdaAccion.innerHTML = `<td><button class="seleccionar-btn" 
-				//	onclick="seleccionarFilaCliente(this)">Seleccionar</button></td>`;
 			});
 		} catch (error) {
 			mostrarAlerta('⚠️ Error de conexión. Intenta nuevamente.')
@@ -116,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	function seleccionarFilaCliente(boton) {
 		// Obtener la fila que contiene el botón
 		var cuit = boton.parentNode.parentNode.cells[0].innerText;
-		var letra = 1
+		var letra
 		// Llamada AJAX a Django para procesar los datos
 		fetch(`/seleccionar_cliente?q=${cuit}`)
 			.then(response => response.json())
@@ -128,20 +127,35 @@ document.addEventListener("DOMContentLoaded", function () {
 				document.getElementById("list").value = `${data.dato_cli[0].lista__nombre}`;
 				document.getElementById("BCliente").disabled = true;
 				document.getElementById("BProductos").disabled = false;
-				if (data.dato_cli[0].responsabilidad_id !== 'RESPONSABLE INSCRIPTO') {
-					letra = 6
+				if (radio[0].checked === true) {
+					if (data.dato_cli[0].responsabilidad__descripcion === 'RESPONSABLE INSCRIPTO') {
+						letra = 1
+					} else {
+						
+						letra = 6
+					}
+				} else {
+					if (data.dato_cli[0].responsabilidad__descripcion === 'RESPONSABLE INSCRIPTO') {
+						letra = 3
+					} else {
+						letra = 8
+					}
 				}
+				fetch(`/obt-nrofact?q=${letra}`)
+					.then(res => res.json())
+					.then(data => {
+						document.getElementById("Nrofact").value = `${data.Nrofact}`;
+						document.getElementById("ModalCliente").style.display = "none";
+						Facturacheck.classList.add("readonly-switcher");
+						Facturacheck1.classList.add("readonly-switcher");
+
+					})
+					.catch(error => console.error("Error en la solicitud:", error));
+			
+			
 			})
 			.catch(error => console.error("Error en la solicitud:", error));
 
-		fetch(`/obt-nrofact?q=${letra}`)
-			.then(res => res.json())
-			.then(data => {
-				document.getElementById("Nrofact").value = `${data.Nrofact}`;
-				//document.getElementById("Nrofact").innerText = `${data.Nrofact}`;
-				document.getElementById("ModalCliente").style.display = "none";
-			})
-			.catch(error => console.error("Error en la solicitud:", error));
 
 		
 	}
@@ -153,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		var query = SearchBar_Products.value;  // Obtener valor ingresado
 		var query2 = document.getElementById("list").value;
 		var tabla = document.getElementById("TablaModalProductos").getElementsByTagName('tbody')[0];
-
 
 		// Realizar petición AJAX
 		try {
@@ -292,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			InputPrecio.value = PrecioR
 			InputPrecio.addEventListener("input", function () {
 				const valor = InputPrecio.value;
-				if (!regex.test(valor)) { //ESTO NO LE ANDA
+				if (!regex.test(valor)) {
 					InputPrecio.classList.add("invalido");
 					BCerrarPrec.disabled = true;
 					BCerrarPrec.classList.add("sin-pointer");
@@ -344,8 +357,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 	/* Funciones Auxiliares */
-
-
+	
 	function vaciarTabla(tabla) {
 		while (tabla.firstChild) {
 			tabla.removeChild(tabla.firstChild);
@@ -460,17 +472,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		inputJson.value = JSON.stringify(datos)
 	}
 	
-
-	//window.onclick = function (event) {
-	//	if (event.target === modal) {
-	//		modal.style.display = "none";
-	//	}
-	//};
-
-
-
-
-
 });
 
 

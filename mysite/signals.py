@@ -11,19 +11,29 @@ def crear_registros_iniciales(sender, **kwargs):
     if sender.name == 'mysite':
         if not RespIva.objects.exists():
             respiva_obj = RespIva.objects.create(descripcion='RESPONSABLE INSCRIPTO')
+            RespIva.objects.create(descripcion='EXENTO')
+            RespIva.objects.create(descripcion='MONOTRIBUTO')
         if not Zonas.objects.exists():
             zonas_obj = Zonas.objects.create(nombre='BUENOS AIRES', dgr=27)
         if not Listas.objects.exists():
             lista_obj = Listas.objects.create(nombre='SUPERMERCADOS')
+            lista_obj1 = Listas.objects.create(nombre='MINORISTAS')
         if not Productos.objects.exists():
             ahora = timezone.now()
             Productos.objects.create(nombre='PAN DE PANCHO X6', lista=lista_obj, precio=1200.00, fecha=ahora, iva='21.0')
+            Productos.objects.create(nombre='PAN DE MIGA 1X10', lista=lista_obj1, precio=1500.00, fecha=ahora, iva='21.0')
         if not Clientes.objects.exists():
             Clientes.objects.create(cuit='30716920093', razons= 'ASD SISTEMAS MEDICOS',
                 direccion='UGARTE MANUEL 3867 Piso:3 Dpto:H', provincia=zonas_obj,
                 lista=lista_obj, responsabilidad=respiva_obj, descuento=0, recargo=0)
         if not Comprobantes.objects.exists():
             Comprobantes.objects.create(descripcion='FACTURA A', codigo='001')
+            Comprobantes.objects.create(descripcion='FACTURA B', codigo='006')
+            Comprobantes.objects.create(descripcion='FACTURA C', codigo='011')
+            Comprobantes.objects.create(descripcion='NOTA DE CREDITO A', codigo='003')
+            Comprobantes.objects.create(descripcion='NOTA DE CREDITO B', codigo='008')
+            Comprobantes.objects.create(descripcion='NOTA DE CREDITO C', codigo='013')
+            Comprobantes.objects.create(descripcion='TIQUE', codigo='083')
         if not Configuracion.objects.exists():
             Configuracion.objects.create(punto_venta='00040')
 

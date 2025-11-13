@@ -22,7 +22,8 @@ class VentasAdmin(admin.ModelAdmin):
         return obj.cliente.nombre    
     
     list_display = ["fecha", "comprobante", 'n_fact', 'cliente', 'total']
-    search_fields = ('fecha', 'comprobante', 'cliente')
+    search_fields = ('fecha', 'comprobante__descripcion', 'cliente__razons')
+    list_filter = ('fecha','comprobante')
 
 @admin.register(Configuracion)
 class ConfiguracionAdmin(admin.ModelAdmin):
@@ -32,3 +33,4 @@ class ConfiguracionAdmin(admin.ModelAdmin):
 class ProductosAdmin(admin.ModelAdmin):
     list_display = ["nombre", "lista", 'precio', 'fecha']
     search_fields = ('nombre', "lista")
+    list_filter = ('lista',)

@@ -38,3 +38,8 @@ header {
 .nav-links li a:hover {
   text-decoration: underline;
 }
+
+.nav-links li a.active {
+  border-bottom: 2px solid #ecf0f1;
+  font-weight: 700;
+}

@@ -18,7 +18,7 @@ class Clientes(models.Model):
     cuit = models.CharField(max_length=13, unique=True)
     razons = models.CharField(max_length=60)  
     direccion = models.CharField(max_length=45)  
-    provincia = models.CharField(max_length=45)  
+    provincia = models.ForeignKey('Zonas', on_delete=models.PROTECT, blank=True, null=True)
     alias = models.CharField(max_length=45, blank=True)
     lista = models.ForeignKey('Listas', on_delete=models.PROTECT)
     responsabilidad = models.ForeignKey('RespIva', on_delete=models.PROTECT)  
@@ -44,8 +44,8 @@ class RespIva(models.Model):
         verbose_name_plural = "RespIva"
 
 class Zonas(models.Model):
-    nombre = models.CharField(max_length=45)  
-    dgr = models.DecimalField(max_digits=2, decimal_places=2)
+    nombre = models.CharField(max_length=45, unique=True)
+    dgr = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         return self.nombre

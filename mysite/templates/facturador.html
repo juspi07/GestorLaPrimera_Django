@@ -21,192 +21,202 @@
 <form method="POST" action="{% url 'generarFactura' %}">
 	{% csrf_token %}
 
-<!-- Variables ocultas -->
-<input type="hidden" name="neto21" id="neto21">
-<input type="hidden" name="neto105" id="neto105">
-<input type="hidden" name="inputJson" id="inputJson">
+	<!-- Variables ocultas -->
+	<input type="hidden" name="neto21" id="neto21">
+	<input type="hidden" name="neto105" id="neto105">
+	<input type="hidden" name="inputJson" id="inputJson">
 
-<div class="ficha-contenedor">
-	<!-- Ficha izquierda -->
-	<table class="ficha">
-		<tr>
-			<td class="etiqueta">Razon Social :</td>
-			<td class="valor"> <input class="input-como-td" id="razons" name="razons" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="razons"></td>-->
-		</tr>
-		<tr>
-			<td class="etiqueta">CUIT :</td>
-			<td class="valor"> <input class="input-como-td" id="cuit" name="cuit" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="cuit"></td>-->
-		</tr>
-		<tr>
-			<td class="etiqueta">Direccion :</td>
-			<td class="valor"> <input class="input-como-td" id="dir" name="dir" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="dir"></td>-->
-		</tr>
-		<tr>
-			<td class="etiqueta">Resposabilidad :</td>
-			<td class="valor"> <input class="input-como-td" id="resp" name="resp" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="resp"></td>-->
-		</tr>
-		<tr>
-			<td class="etiqueta">Lista :</td>
-			<td class="valor"> <input class="input-como-td" id="list" name="list" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="list"></td>-->
-		</tr>
-	</table>
-
-	<div class="boton-centro">
-		<button type="button" id="BCliente">Buscar Cliente</button>
-	</div>
-
-	<div>
-		<!-- Ficha derecha -->
+	<div class="ficha-contenedor">
+		<!-- Ficha izquierda -->
 		<table class="ficha">
 			<tr>
-				<td class="etiqueta">Factura # :</td>
-				<!-- <td id="Nrofact" class="valor"> ------ </td> -->
-				<td> <input class="input-como-td" name="Nrofact" id="Nrofact" readonly tabindex="-1"></input></td>
+				<td class="etiqueta">Razon Social :</td>
+				<td class="valor"> <input class="input-como-td" id="razons" name="razons" readonly
+						tabindex="-1"></input></td>
 			</tr>
 			<tr>
-				<td class="etiqueta">Fecha :</td>
-				<td class="valor"> <input class="input-como-td" value={{fecha}} name="date" id="date" readonly tabindex="-1"></input></td>
-				<!--<td class="valor" id="date">{{fecha}}</td>-->
+				<td class="etiqueta">CUIT :</td>
+				<td class="valor"> <input class="input-como-td" id="cuit" name="cuit" readonly tabindex="-1"></input>
+				</td>
+			</tr>
+			<tr>
+				<td class="etiqueta">Direccion :</td>
+				<td class="valor"> <input class="input-como-td" id="dir" name="dir" readonly tabindex="-1"></input></td>
+			</tr>
+			<tr>
+				<td class="etiqueta">Resposabilidad :</td>
+				<td class="valor"> <input class="input-como-td" id="resp" name="resp" readonly tabindex="-1"></input>
+				</td>
+			</tr>
+			<tr>
+				<td class="etiqueta">Lista :</td>
+				<td class="valor"> <input class="input-como-td" id="list" name="list" readonly tabindex="-1"></input>
+				</td>
 			</tr>
 		</table>
-		<div class="boton-wrapper">
-			<button id="btconfirmar" type="submit" class="boton-confirmar" disabled>Imprimir</button>
+		<div class="toggle-container" id='tipofactura'>
+			<input type="radio" name="toggle" id="option1" value="factura" checked>
+			<label for="option1" class="toggle-label" id="option1label">Factura</label>
+
+			<input type="radio" name="toggle" id="option2" value="credito">
+			<label for="option2" class="toggle-label" id="option2label">Nota Credito</label>
+
+			<div class="toggle-slider"></div>
 		</div>
-	</div>
-</div>
 
-<h2 class="division-seccion"></h2>
-
-<!-- Tabla principal debajo -->
-<div class="tabla-principal">
-	<table id="tablaProductos" class="tabla-principal-contenedor">
-	</table>
-
-	<div class="boton-inferior">
-		<button type="button" id="BProductos" disabled>Buscar Productos</button>
-	</div>
-</div>
-
-
-<div class="ficha-contenedor-total">
-	<table class="ficha">
-		<tr>
-			<td class="etiqueta">Sub-Total $ :</td>
-			<td class="valor" id="subtotal">------</td>
-		</tr>
-		<tr>
-			<td class="etiqueta">Iva 21% :</td>
-			<td class="valor"> <input class="input-como-td" value='------' name="iva21" id="iva21" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="iva21">------</td>-->
-		</tr>
-		<tr>
-			<td class="etiqueta">Iva 10.5% :</td>
-			<td class="valor"> <input class="input-como-td" value='------' name="iva105" id="iva105" readonly tabindex="-1"></input></td>
-			<!--<td class="valor" id="iva105">------</td>-->
-		</tr>
-		<tr>
-			<td class="etiqueta">Total ($) :</td>
-			<td class="valor"> <input class="input-como-td" value='------' name="total" id="total" readonly tabindex="-1"></input></td>
-			<!--<td class="valor negrita" id="total">------</td>-->
-		</tr>
-	</table>
-</div>
-
-<!-- Modal Cliente oculto -->
-<div id="ModalCliente" class="modal">
-	<div class="modal-contenido">
-		<span class="cerrar" id="CerrarModalClientes">&times;</span>
-		<h2>Buscar Cliente</h2>
-		<div class="busqueda-modal">
-			<input type="text" id="SearchBar_Client""
-				placeholder=" Buscar..." autocomplete="off">
+		<div class="boton-centro">
+			<button type="button" id="BCliente">Buscar Cliente</button>
 		</div>
-		<div class="tabla-scroll">
-			<table id="TablaModalClient" class="tabla-modal">
-				<thead>
-					<tr>
-						<th>Cuit</th>
-						<th>Razon Social</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
+		<div>
+			<!-- Ficha derecha -->
+			<table class="ficha">
+				<tr>
+					<td class="etiqueta">Factura # :</td>
+					<td> <input class="input-como-td" name="Nrofact" id="Nrofact" readonly tabindex="-1"></input></td>
+				</tr>
+				<tr>
+					<td class="etiqueta">Fecha :</td>
+					<td class="valor"> <input class="input-como-td" value={{fecha}} name="date" id="date" readonly
+							tabindex="-1"></input></td>
+				</tr>
 			</table>
+			<div class="boton-wrapper">
+				<button id="btconfirmar" type="submit" class="boton-confirmar" disabled>Imprimir</button>
+			</div>
 		</div>
 	</div>
-</div>
 
-<!-- Modal Productos oculto -->
-<div id="ModalProductos" class="modal">
-	<div class="modal-contenido">
-		<h2>Buscar Productos</h2>
-		<div class="busqueda-modal">
-			<input type="text" id="SearchBar_Products""
+	<h2 class="division-seccion"></h2>
+
+	<!-- Tabla principal debajo -->
+	<div class="tabla-principal">
+		<table id="tablaProductos" class="tabla-principal-contenedor">
+		</table>
+
+		<div class="boton-inferior">
+			<button type="button" id="BProductos" disabled>Buscar Productos</button>
+		</div>
+	</div>
+
+
+	<div class="ficha-contenedor-total">
+		<table class="ficha">
+			<tr>
+				<td class="etiqueta">Sub-Total $ :</td>
+				<td class="valor" id="subtotal">------</td>
+			</tr>
+			<tr>
+				<td class="etiqueta">Iva 21% :</td>
+				<td class="valor"> <input class="input-como-td" value='------' name="iva21" id="iva21" readonly
+						tabindex="-1"></input></td>
+				<!--<td class="valor" id="iva21">------</td>-->
+			</tr>
+			<tr>
+				<td class="etiqueta">Iva 10.5% :</td>
+				<td class="valor"> <input class="input-como-td" value='------' name="iva105" id="iva105" readonly
+						tabindex="-1"></input></td>
+				<!--<td class="valor" id="iva105">------</td>-->
+			</tr>
+			<tr>
+				<td class="etiqueta">Total ($) :</td>
+				<td class="valor"> <input class="input-como-td" value='------' name="total" id="total" readonly
+						tabindex="-1"></input></td>
+				<!--<td class="valor negrita" id="total">------</td>-->
+			</tr>
+		</table>
+	</div>
+
+	<!-- Modal Cliente oculto -->
+	<div id="ModalCliente" class="modal">
+		<div class="modal-contenido">
+			<span class="cerrar" id="CerrarModalClientes">&times;</span>
+			<h2>Buscar Cliente</h2>
+			<div class="busqueda-modal">
+				<input type="text" id="SearchBar_Client""
 				placeholder=" Buscar..." autocomplete="off">
+			</div>
+			<div class="tabla-scroll">
+				<table id="TablaModalClient" class="tabla-modal">
+					<thead>
+						<tr>
+							<th>Cuit</th>
+							<th>Razon Social</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 		</div>
-		<div class="tabla-scroll">
-			<table id="TablaModalProductos" class="tabla-modal">
-				<thead>
-					<tr>
-						<th>Producto</th>
-						<th>Cantidad</th>
-						<th>Precio</th>
-						<th>Iva %</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
-		<button class="FinalizarB" type="button" id="BCerrarProd">Finalizar</button>
 	</div>
-</div>
 
-<!-- Modal Cantidad oculto -->
-<div id="ModalCantidad" class="modal">
-	<div class="modal-contenido">
-		<h2>Modificar Cantidad</h2>
-		<div class="busqueda-modal">
-			<input class="input-celda" type="text" id="InputCant""
+	<!-- Modal Productos oculto -->
+	<div id="ModalProductos" class="modal">
+		<div class="modal-contenido">
+			<h2>Buscar Productos</h2>
+			<div class="busqueda-modal">
+				<input type="text" id="SearchBar_Products""
+				placeholder=" Buscar..." autocomplete="off">
+			</div>
+			<div class="tabla-scroll">
+				<table id="TablaModalProductos" class="tabla-modal">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Cantidad</th>
+							<th>Precio</th>
+							<th>Iva %</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<button class="FinalizarB" type="button" id="BCerrarProd">Finalizar</button>
+		</div>
+	</div>
+
+	<!-- Modal Cantidad oculto -->
+	<div id="ModalCantidad" class="modal">
+		<div class="modal-contenido">
+			<h2>Modificar Cantidad</h2>
+			<div class="busqueda-modal">
+				<input class="input-celda" type="text" id="InputCant""
 				autocomplete=" off">
-		</div>
-		<button class="FinalizarB" type="button" id="BCerrarCant">Finalizar</button>
-	</div>
-</div>
-
-<!-- Modal Precio oculto -->
-<div id="ModalPrecio" class="modal">
-	<div class="modal-contenido">
-		<h2>Modificar Precio</h2>
-		<div class="busqueda-modal">
-			<input class="input-celda" type="text" id="InputPrecio" placeholder="Ingresar precio" autocomplete="off">
-		</div>
-		<div class="grupo-radio">
-			<label><input type="radio" name="opcion" value="1" checked> Adaptar</label>
-			<label><input type="radio" name="opcion" value="2"> No adaptar</label>
-		</div>
-
-		<button class="FinalizarB" type="button" id="BCerrarPrec">Finalizar</button>
-	</div>
-</div>
-
-<!-- Modal Arca oculto -->
-<div id="modalarca" class="modal">
-	<div class="modal-contenido">
-		<h2 class="titulo-busqueda">Conexión ARCA</h2>
-		<br></br>
-		<div style="text-align: center;" id="estado-wsaa">
-			<h4>Conectando ...</h4>
+			</div>
+			<button class="FinalizarB" type="button" id="BCerrarCant">Finalizar</button>
 		</div>
 	</div>
-</div>
+
+	<!-- Modal Precio oculto -->
+	<div id="ModalPrecio" class="modal">
+		<div class="modal-contenido">
+			<h2>Modificar Precio</h2>
+			<div class="busqueda-modal">
+				<input class="input-celda" type="text" id="InputPrecio" placeholder="Ingresar precio"
+					autocomplete="off">
+			</div>
+			<div class="grupo-radio">
+				<label><input type="radio" name="opcion" value="1" checked> Adaptar</label>
+				<label><input type="radio" name="opcion" value="2"> No adaptar</label>
+			</div>
+
+			<button class="FinalizarB" type="button" id="BCerrarPrec">Finalizar</button>
+		</div>
+	</div>
+
+	<!-- Modal Arca oculto -->
+	<div id="modalarca" class="modal">
+		<div class="modal-contenido">
+			<h2 class="titulo-busqueda">Conexión ARCA</h2>
+			<br></br>
+			<div style="text-align: center;" id="estado-wsaa">
+				<h4>Conectando ...</h4>
+			</div>
+		</div>
+	</div>
 
 </form>
 

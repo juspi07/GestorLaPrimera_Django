@@ -8,7 +8,7 @@ Django==5.2.6
 django-qr-code==4.2.0
 future==1.0.0
 httplib2==0.31.0
-M2Crypto @ file:///C:/Anaconda/envs/Facturador_LaPrimera310/Facturador_LaPrimera/M2Crypto-0.38.0-cp310-cp310-win_amd64.whl#sha256=b46f3cd57de32b33d2c7f3f6f2900e41cc8e4062b97211dc97bf7d2906d5836c
+M2Crypto==0.46.2
 mysqlclient==2.2.7
 pillow==12.0.0
 pycparser==2.23
